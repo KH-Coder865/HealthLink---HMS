@@ -1,5 +1,6 @@
-from .extentions import db
+from extentions import db
 from datetime import datetime, timezone
+from flask_security.core import UserMixin, RoleMixin
 
 class BaseModel(db.Model):
     __abstract__ = True
@@ -8,18 +9,32 @@ class BaseModel(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     __tablename__ = 'users'
 
     name = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False, default="patient")  # "admin", "doctor", "patient"
+    #for flask security
+    fs_uniquifier = db.Column(db.String, unique=True, nullable=False)
+    active = db.Column(db.Boolean(), default=True)
+    #If active=false, user cannot login
 
     # Relationships
+    roles=db.relationship('Role', secondary='user_roles', backref='users')
+    #role can be "admin", "doctor", "patient"
     doctor_profile = db.relationship("Doctor", backref="user", uselist=False)
     patient_profile = db.relationship("Patient", backref="user", uselist=False)
 
+class Role(BaseModel, RoleMixin):
+    __tablename__ = 'roles'
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class UserRoles(BaseModel):
+    __tablename__ = 'user_roles'
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id'))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'

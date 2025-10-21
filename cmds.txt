@@ -1,0 +1,2 @@
+# For initializing db
+python -m scripts.init_db
