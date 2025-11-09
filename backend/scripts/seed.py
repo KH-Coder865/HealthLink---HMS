@@ -8,31 +8,32 @@ from flask_security.utils import hash_password
 from app import create_app
 from models import db, User, Role, UserRoles, Doctor, Patient, Specialization, Appointment, Treatment
 
-# Initialize Faker
+# --- Faker Setup ---
 fake = Faker()
 fake.add_provider(FoodProvider)
 
 def indian_phone_number():
-    """Generate Indian-style +91 formatted phone number"""
+    """Generate Indian-style +91 formatted 10-digit number"""
     return f"+91-{random.randint(6000000000, 9999999999)}"
+
 
 app = create_app()
 
 with app.app_context():
-    print("Resetting database...")
+    print("🔄 Resetting database...")
     db.drop_all()
     db.create_all()
 
-    # --- Create roles ---
-    print("Creating roles...")
+    # --- Create Roles ---
+    print("🧩 Creating roles...")
     admin_role = Role(name="admin", description="Administrator with full access")
     doctor_role = Role(name="doctor", description="Doctor user with limited admin access")
     patient_role = Role(name="patient", description="General patient user")
     db.session.add_all([admin_role, doctor_role, patient_role])
     db.session.commit()
 
-    # --- Create admin user ---
-    print("Creating admin user...")
+    # --- Create Admin ---
+    print("👑 Creating admin user...")
     admin_user = User(
         name="Admin User",
         email="admin@hospital.com",
@@ -41,13 +42,12 @@ with app.app_context():
     )
     db.session.add(admin_user)
     db.session.commit()
-
     db.session.add(UserRoles(user_id=admin_user.id, role_id=admin_role.id))
     db.session.commit()
 
     # --- Create Specializations ---
-    print("Creating specializations...")
-    specialization_names = [
+    print("🏥 Creating specializations...")
+    specialization_data = [
         ("Cardiology", "Heart and blood vessel specialists."),
         ("Neurology", "Brain and nervous system specialists."),
         ("Pediatrics", "Child and adolescent care."),
@@ -61,14 +61,14 @@ with app.app_context():
     ]
 
     specializations = []
-    for name, desc in specialization_names:
+    for name, desc in specialization_data:
         sp = Specialization(name=name, description=desc)
         db.session.add(sp)
         specializations.append(sp)
     db.session.commit()
 
-    # --- Create doctors ---
-    print("Creating doctors...")
+    # --- Create Doctors ---
+    print("🩺 Creating doctors...")
     doctors = []
     for i in range(10):
         user = User(
@@ -78,26 +78,29 @@ with app.app_context():
             fs_uniquifier=str(uuid.uuid4())
         )
         db.session.add(user)
-        db.session.flush()  # assign id
+        db.session.flush()  # assign user.id
+
         db.session.add(UserRoles(user_id=user.id, role_id=doctor_role.id))
 
         specialization = random.choice(specializations)
         availability = {
-            day: [f"{random.randint(8, 16)}:00", f"{random.randint(17, 20)}:00"]
+            day: [f"{random.randint(8, 12)}:00", f"{random.randint(13, 18)}:00"]
             for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         }
+
         doctor = Doctor(
             u_id=user.id,
             specialization_id=specialization.id,
             availability=availability,
-            contact_number=indian_phone_number()  # added field
+            contact_number=indian_phone_number()
         )
         db.session.add(doctor)
         doctors.append(doctor)
+
     db.session.commit()
 
-    # --- Create patients ---
-    print("Creating patients...")
+    # --- Create Patients ---
+    print("🧍 Creating patients...")
     genders = ["Male", "Female", "Other"]
     patients = []
     for i in range(50):
@@ -109,6 +112,7 @@ with app.app_context():
         )
         db.session.add(user)
         db.session.flush()
+
         db.session.add(UserRoles(user_id=user.id, role_id=patient_role.id))
 
         patient = Patient(
@@ -121,16 +125,16 @@ with app.app_context():
         )
         db.session.add(patient)
         patients.append(patient)
+
     db.session.commit()
 
-    # --- Create appointments and treatments ---
-    print("Creating appointments and treatments...")
+    # --- Create Appointments & Treatments ---
+    print("📅 Creating appointments and treatments...")
     statuses = ["scheduled", "completed", "cancelled"]
-    for _ in range(200):  # 200 appointments total
+
+    for _ in range(200):
         doctor = random.choice(doctors)
         patient = random.choice(patients)
-
-        # random date over last 6 months
         days_ago = random.randint(0, 180)
         appt_date = datetime.now().date() - timedelta(days=days_ago)
         appt_time = time(random.randint(8, 18), random.choice([0, 15, 30, 45]))
@@ -147,7 +151,6 @@ with app.app_context():
         db.session.flush()
 
         if status == "completed":
-            # Create a treatment record for completed appointments
             diagnosis = random.choice([
                 "Common Cold", "Hypertension", "Allergic Rhinitis",
                 "Migraine", "Type 2 Diabetes", "Anxiety Disorder",
@@ -155,7 +158,7 @@ with app.app_context():
             ])
             prescription = [
                 {
-                    "med": fake.sentence(nb_words=1).strip('.'),
+                    "med": fake.word().capitalize(),
                     "dose": f"{random.randint(100, 500)}mg",
                     "duration": f"{random.randint(3, 10)} days"
                 },
@@ -174,4 +177,4 @@ with app.app_context():
             db.session.add(treatment)
 
     db.session.commit()
-    print("✅ Database successfully seeded with roles, users, doctors, patients, appointments, and treatments.")
+    print("✅ Database successfully seeded with Admin, Doctors, Patients, Appointments & Treatments.")

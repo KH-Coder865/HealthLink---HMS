@@ -11,6 +11,8 @@ class LocalDevelopmentConfig(BaseConfig):
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
-
+    WTF_CSRF_ENABLED = False
+    SECURITY_TOKEN_AUTHENTICATION_HEADER = "Authentication-Token"
+    SECURITY_TOKEN_AUTHENTICATION_KEY = "auth_token"
 class ProductionConfig(BaseConfig):
     DEBUG = False

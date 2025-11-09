@@ -47,21 +47,22 @@ class Specialization(db.Model):
     doctors = db.relationship("Doctor", backref="specialization_ref", lazy=True)
 
 
-class Doctor(db.Model):
+class Doctor(BaseModel):
     __tablename__ = 'doctors'
 
-    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)  # FK to User
+    u_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # FK to User
     specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), nullable=False)
     availability = db.Column(db.JSON, nullable=True)  # Store availability as JSON (e.g., {"Monday": ["10:00", "14:00"]})
+    contact_number = db.Column(db.String, nullable=True)
 
     # Relationships
     appointments = db.relationship("Appointment", backref="doctor", lazy=True)
 
 
-class Patient(db.Model):
+class Patient(BaseModel):
     __tablename__ = 'patients'
 
-    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)  # FK to User
+    u_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # FK to User
     age = db.Column(db.Integer, nullable=True)
     gender = db.Column(db.String, nullable=True)
     contact_number = db.Column(db.String, nullable=True)
@@ -87,10 +88,13 @@ class Appointment(BaseModel):
 
 
 
-class Treatment(BaseModel):
+class Treatment(db.Model):
     __tablename__ = 'treatments'
 
     appointment_id = db.Column(db.Integer, db.ForeignKey('appointments.id'), primary_key=True)
     diagnosis = db.Column(db.Text, nullable=True)
     prescription = db.Column(db.JSON, nullable=True)  # Store as JSON: [{"med": "Paracetamol", "dose": "500mg", "duration": "5 days"}]
     notes = db.Column(db.Text, nullable=True)
+
+    created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

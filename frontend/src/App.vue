@@ -1,14 +1,11 @@
-<script setup>
-import Navbar from './components/Navbar.vue'
-import AdminTable from './components/AdminTable.vue';
-</script>
+<script setup></script>
 
 <template>
-  <Navbar msg="Welcome my Admin" />
-  <AdminTable nm="Dr. ABCDE" type="doc" hd="Registered Doctors" />
-  <AdminTable nm="Mr. FGHIJ" type="pat" hd="Registered Patients" />
+  <h1>You did it!</h1>
+  <p>
+    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
+    documentation
+  </p>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

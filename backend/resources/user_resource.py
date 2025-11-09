@@ -1,0 +1,68 @@
+from flask import request, jsonify
+from flask_restful import Resource, marshal, fields
+from services import UserService
+
+doctor_fields = {
+    "id": fields.Integer,
+    "specialization_id": fields.Integer,
+    "availability": fields.Raw,  # JSON field
+    "contact_number": fields.String,
+}
+
+patient_fields = {
+    "id": fields.Integer,
+    "age": fields.Integer,
+    "gender": fields.String,
+    "contact_number": fields.String,
+    "address": fields.String,
+    "emergency_contact": fields.String,
+}
+
+user_fields = {
+    "id": fields.Integer,
+    "name": fields.String,
+    "email": fields.String,
+    "active": fields.Boolean,
+    "doctor_profile": fields.Nested(doctor_fields, allow_null=True),
+    "patient_profile": fields.Nested(patient_fields, allow_null=True),
+}
+
+"""/api/user/:id"""
+class UserResource(Resource):
+    def get(self,id):
+        user= UserService.get_by_id(id)
+        return marshal(user, user_fields), 200
+    
+    def put(self,id):
+        user=UserService.get_by_id(id)
+        if not user:
+            return {"message":"User not found"},404
+        data=request.get_json()
+        UserService.update(data)
+        return marshal(user, user_fields), 200
+    
+    def delete(self,id):
+        user=UserService.get_by_id(id)
+        if not user:
+            return {"message":"User not found"},404
+        UserService.delete(id)
+        return marshal(user, user_fields), 200
+    
+    def patch(self,id):
+        user=UserService.get_by_id(id)
+        if not user:
+            return {"message":"User not found"},404
+        data=request.get_json()
+        UserService.partial_update(id,data)
+        return marshal(user, user_fields), 200
+
+"""/api/user -> get, post"""
+class UserListResource(Resource):
+    def get(self):
+        users=UserService.get_all()
+        return marshal(users, user_fields), 200
+
+    def post(self):
+        data=request.get_json()
+        user=UserService.create(data)
+        return marshal(user, user_fields), 201
