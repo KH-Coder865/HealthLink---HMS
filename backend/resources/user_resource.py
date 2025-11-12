@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from flask_restful import Resource, marshal, fields
 from services import UserService
+from flask_security import auth_required, roles_required
 
 doctor_fields = {
     "id": fields.Integer,
@@ -28,6 +29,8 @@ user_fields = {
 }
 
 """/api/user/:id"""
+@auth_required('token')
+@roles_required('admin')
 class UserResource(Resource):
     def get(self,id):
         user= UserService.get_by_id(id)
@@ -57,6 +60,8 @@ class UserResource(Resource):
         return marshal(user, user_fields), 200
 
 """/api/user -> get, post"""
+@auth_required('token')
+@roles_required('admin')
 class UserListResource(Resource):
     def get(self):
         users=UserService.get_all()

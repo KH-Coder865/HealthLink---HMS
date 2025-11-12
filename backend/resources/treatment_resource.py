@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, marshal, fields
 from services import TreatmentService
+from flask_security import auth_required, roles_accepted, roles_required
 
 treatment_fields = {
     "appointment_id": fields.Integer,
@@ -9,11 +10,14 @@ treatment_fields = {
     "notes": fields.String,
 }
 
+@auth_required('token')
 class TreatmentResource(Resource):
+    @roles_accepted('doctor','patient','admin')
     def get(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
         return marshal(treat, treatment_fields), 200
 
+    @roles_required('doctor')
     def patch(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
         if not treat:
@@ -22,6 +26,7 @@ class TreatmentResource(Resource):
         TreatmentService.partial_update(appointment_id, data)
         return marshal(treat, treatment_fields), 200
 
+    @roles_required('doctor')
     def delete(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
         if not treat:
@@ -29,12 +34,14 @@ class TreatmentResource(Resource):
         TreatmentService.delete(appointment_id)
         return {"message": "Treatment deleted successfully"}, 200
 
-
+@auth_required('token')
 class TreatmentListResource(Resource):
+    @roles_accepted('admin','doctor','patient')
     def get(self):
         treats = TreatmentService.get_all()
         return marshal(treats, treatment_fields), 200
 
+    @roles_accepted('doctor')
     def post(self):
         data = request.get_json()
         treat = TreatmentService.create(data)
