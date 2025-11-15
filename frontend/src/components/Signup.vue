@@ -1,6 +1,3 @@
-<script setup>
-
-</script>
 
 <template>
   <div class="d-flex justify-content-center align-items-center min-h-100 bg-light p-3 p-sm-5">
@@ -33,7 +30,8 @@
             <input v-model="confirm" type="password" class="form-control" placeholder="Confirm Password" required>
           </div>
 
-          <button type="submit" class="btn btn-orng btn-lg fw-bold w-100">Register</button>
+          <button type="submit" class="btn btn-orng btn-lg fw-bold w-100" :disabled="loading">
+                <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>{{ loading ? "Signing Up.." : "Register" }}</button>
         </form>
 
         <div class="text-center mt-4">
@@ -41,10 +39,70 @@
             Already have an account? Login
           </router-link>
         </div>
+
+        <!-- Error message (if needed) -->
+            <div v-if="error" class="alert alert-danger mt-3 w-100 text-center">
+                {{ error }}
+            </div>
+
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import useUserStore from '@/stores/user';
+
+export default {
+    name: "Signup",
+    data(){
+        return {
+            name: "",
+            email: "",
+            password: "",
+            confirm: "",
+            loading: false,
+            error: "",
+            userStore: null,
+        };
+    },
+
+    created(){
+        this.userStore = useUserStore();
+    },
+
+    methods: {
+        async signup(){
+            this.error = "";
+            this.loading = true;
+
+            if(this.password !== this.confirm){
+                this.error = "Passwords do not match";
+                this.loading = false;
+                return;
+            }
+
+            try{
+                // REGISTER PATIENT ONLY
+                await this.userStore.register("/auth/register", {
+                    name: this.name,
+                    email: this.email,
+                    password: this.password,
+                    role: "patient", 
+                });
+
+                // Auto-login or redirect after signup
+                this.$router.push("/pdash");
+
+            } catch(e){
+                this.error = e.message || "Signup Failed";
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
+}
+</script>
 
 <style scoped>
 .txt-orng {

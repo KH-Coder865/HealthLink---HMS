@@ -51,6 +51,16 @@ const useUserStore = defineStore("user", {
             if(user) this.setUser(user);
         },
 
+        async register(endpoint, credentials) {
+            const res = await api.post(endpoint, credentials);
+            if (!res.token) {
+                throw new Error("Registration failed: No token received");
+            }
+            this.setToken(res.token);
+            this.setUser(res);
+        }
+,
+
         async loginWithCredentials(endpoint="/auth/login", credentials = {}) {
         const res = await api.post(endpoint, credentials); // res = { token, id, name, email }
         if (!res.token) {

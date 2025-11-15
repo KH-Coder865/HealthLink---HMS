@@ -79,5 +79,6 @@ def register():
         "id": user.id,
         "name": user.name,
         "email": user.email,
+        "role": user.roles[0].name,
         "token": user.get_auth_token()
     }), 201
