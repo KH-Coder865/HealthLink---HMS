@@ -5,6 +5,8 @@ from flask import Blueprint,request,jsonify
 from flask_login import current_user
 from flask_security.utils import verify_password, hash_password, login_user
 from models import User, db
+from services.patient_service import PatientService
+
 from flask import current_app as app
 
 
@@ -32,53 +34,73 @@ def login():
         "name": user.name,
         "email": user.email,
         "role": list(user.roles)[0].name,
+        "active": user.active,
         "token": user.get_auth_token()
         }), 200
 
-@auth_bp.route("/register",methods=['POST'])
+@auth_bp.route("/register", methods=["POST"])
 def register():
-    data = request.get_json()
+    data = request.get_json() or {}
 
-    email = data["email"]
-    password = data["password"]
-    name = data["name"]
-    role = data.get("role", "patient")
+    email = data.get("email")
+    password = data.get("password")
+    name = data.get("name")
+    role = data.get("role")
 
-    active = True
-
-    if(not email or not password or not name or not role in ["admin","doctor","patient"]):
+    if not email or not password or not name or role not in ["doctor", "patient"]:
         return jsonify({"message": "invalid input"}), 400
-    
-    if role=="doctor":
-        active=False
 
-    datastore=app.datastore
+    if role == "admin":
+        return jsonify({"message": "admin cannot be registered"}), 400
+
 
     if User.query.filter_by(email=email).first():
         return jsonify({"message": "user already exists"}), 400
 
-    datastore.create_user(email=email, name=name, password=hash_password(password), active=active)
+    datastore = app.datastore
+    active = True if role == "patient" else False
+
     try:
+        user = datastore.create_user(
+            email=email,
+            name=name,
+            password=hash_password(password),
+            active=active
+        )
         db.session.commit()
     except:
         db.session.rollback()
-        return jsonify({"message": "error"}), 400
-
-
-    role=datastore.find_role(role)
-    user=datastore.find_user(email=email)
-    datastore.add_role_to_user(user, role)
+        return jsonify({"message": "error creating user"}), 500
 
     try:
+        role_obj = datastore.find_role(role)
+        datastore.add_role_to_user(user, role_obj)
         db.session.commit()
     except:
         db.session.rollback()
-        return jsonify({"message": "error"}), 400
+        return jsonify({"message": "error assigning role"}), 500
+
+    try:
+        if role == "patient":
+            PatientService.create({
+                "u_id": user.id,
+                "gender": data.get("gender"),
+                "age": data.get("age"),
+                "contact_number": data.get("contact_number"),
+                "emergency_contact": data.get("emergency_contact"),
+                "address": data.get("address")
+            })
+    except:
+        db.session.rollback()
+        return jsonify({"message": "error creating patient profile"}), 500
+
+    token = user.get_auth_token()
 
     return jsonify({
         "id": user.id,
         "name": user.name,
         "email": user.email,
         "role": user.roles[0].name,
-        "token": user.get_auth_token()
+        "active": user.active,
+        "token": token
     }), 201

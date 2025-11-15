@@ -15,16 +15,21 @@ class PatientService:
 
     @staticmethod
     def create(data):
+        print("I am in create!")
         """Create a new patient profile"""
         allowed_keys = {"u_id", "age", "gender", "contact_number", "address", "emergency_contact"}
         clean_data = {k: v for k, v in data.items() if k in allowed_keys}
 
         if "u_id" not in clean_data:
+            print("service error")
             raise ServiceError("Missing required field: 'u_id'")
 
         patient = Patient(**clean_data)
+        print("before add")
         db.session.add(patient)
+        print("before commit")
         db.session.commit()
+        print("after commit")
         return patient
 
     @staticmethod

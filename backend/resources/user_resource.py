@@ -73,10 +73,3 @@ class UserListResource(Resource):
     def get(self):
         users=UserService.get_all()
         return marshal(users, user_fields), 200
-
-    @auth_required('token')
-    @roles_required('admin')
-    def post(self):
-        data=request.get_json()
-        user=UserService.create(data)
-        return marshal(user, user_fields), 201
