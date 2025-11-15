@@ -11,13 +11,15 @@ doctor_fields = {
     "contact_number": fields.String,
 }
 
-@auth_required('token')
+
 class DoctorResource(Resource):
+    @auth_required('token')
     @roles_accepted('doctor', 'admin')
     def get(self, id):
         doc = DocService.get_by_id(id)
         return marshal(doc, doctor_fields), 200
 
+    @auth_required('token')
     @roles_accepted('doctor', 'admin')
     def put(self, id):
         doc = DocService.get_by_id(id)
@@ -27,6 +29,7 @@ class DoctorResource(Resource):
         DocService.update(data)
         return marshal(doc, doctor_fields), 200
 
+    @auth_required('token')
     @roles_accepted('doctor', 'admin')
     def patch(self, id):
         doc = DocService.get_by_id(id)
@@ -36,6 +39,7 @@ class DoctorResource(Resource):
         DocService.partial_update(id, data)
         return marshal(doc, doctor_fields), 200
 
+    @auth_required('token')
     @roles_required('admin')
     def delete(self, id):
         doc = DocService.get_by_id(id)

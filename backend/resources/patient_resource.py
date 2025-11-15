@@ -13,13 +13,15 @@ patient_fields = {
     "emergency_contact": fields.String,
 }
 
-@auth_required('token')
+
 class PatientResource(Resource):
+    @auth_required('token')
     @roles_accepted('patient', 'admin','doctor')
     def get(self, id):
         patient = PatientService.get_by_id(id)
         return marshal(patient, patient_fields), 200
 
+    @auth_required('token')
     @roles_accepted('patient', 'admin')
     def put(self, id):
         patient = PatientService.get_by_id(id)
@@ -29,6 +31,7 @@ class PatientResource(Resource):
         PatientService.update(id, data)
         return marshal(patient, patient_fields), 200
 
+    @auth_required('token')
     @roles_accepted('patient', 'admin')
     def patch(self, id):
         patient = PatientService.get_by_id(id)
@@ -38,6 +41,7 @@ class PatientResource(Resource):
         PatientService.partial_update(id, data)
         return marshal(patient, patient_fields), 200
 
+    @auth_required('token')
     @roles_required('admin')
     def delete(self, id):
         patient = PatientService.get_by_id(id)
@@ -46,13 +50,15 @@ class PatientResource(Resource):
         PatientService.delete(id)
         return {"message": "Patient deleted successfully"}, 200
 
-@auth_required('token')
+
 class PatientListResource(Resource):
+    @auth_required('token')
     @roles_accepted('doctor','patient','admin')
     def get(self):
         patients = PatientService.get_all()
         return marshal(patients, patient_fields), 200
 
+    @auth_required('token')
     @roles_accepted('patient')
     def post(self):
         data = request.get_json()

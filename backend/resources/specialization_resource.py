@@ -9,13 +9,14 @@ specialization_fields = {
     "description": fields.String,
 }
 
-@auth_required('token')
 class SpecializationResource(Resource):
+    @auth_required('token')
     @roles_accepted('patient','admin','doctor')
     def get(self, id):
         spec = SpecializationService.get_by_id(id)
         return marshal(spec, specialization_fields), 200
 
+    @auth_required('token')
     @roles_accepted('admin')
     def patch(self, id):
         spec = SpecializationService.get_by_id(id)
@@ -25,6 +26,7 @@ class SpecializationResource(Resource):
         SpecializationService.partial_update(id, data)
         return marshal(spec, specialization_fields), 200
 
+    @auth_required('token')
     @roles_accepted('admin')
     def delete(self, id):
         spec = SpecializationService.get_by_id(id)
@@ -33,13 +35,16 @@ class SpecializationResource(Resource):
         SpecializationService.delete(id)
         return {"message": "Specialization deleted successfully"}, 200
 
-@auth_required('token')
-@roles_accepted('admin')
+
 class SpecializationListResource(Resource):
+    @auth_required('token')
+    @roles_accepted('admin')
     def get(self):
         specs = SpecializationService.get_all()
         return marshal(specs, specialization_fields), 200
-
+    
+    @auth_required('token')
+    @roles_accepted('admin')
     def post(self):
         data = request.get_json()
         spec = SpecializationService.create(data)

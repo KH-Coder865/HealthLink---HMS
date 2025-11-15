@@ -13,13 +13,14 @@ appointment_fields = {
 }
 
 
-@auth_required('token')
 class AppointmentResource(Resource):
+    @auth_required('token')
     @roles_accepted('doctor', 'admin','patient')
     def get(self, id):
         appt = AppointmentService.get_by_id(id)
         return marshal(appt, appointment_fields), 200
     
+    @auth_required('token')
     @roles_accepted('doctor', 'admin')
     def patch(self, id):
         appt = AppointmentService.get_by_id(id)
@@ -29,6 +30,7 @@ class AppointmentResource(Resource):
         AppointmentService.partial_update(id, data)
         return marshal(appt, appointment_fields), 200
 
+    @auth_required('token')
     @roles_accepted('doctor', 'admin', 'patient')
     def delete(self, id):
         appt = AppointmentService.get_by_id(id)

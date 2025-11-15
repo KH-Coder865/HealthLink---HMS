@@ -29,13 +29,16 @@ user_fields = {
 }
 
 """/api/user/:id"""
-@auth_required('token')
-@roles_required('admin')
+
 class UserResource(Resource):
+    @auth_required('token')
+    @roles_required('admin')
     def get(self,id):
         user= UserService.get_by_id(id)
         return marshal(user, user_fields), 200
     
+    @auth_required('token')
+    @roles_required('admin')
     def put(self,id):
         user=UserService.get_by_id(id)
         if not user:
@@ -44,6 +47,8 @@ class UserResource(Resource):
         UserService.update(data)
         return marshal(user, user_fields), 200
     
+    @auth_required('token')
+    @roles_required('admin')
     def delete(self,id):
         user=UserService.get_by_id(id)
         if not user:
@@ -51,6 +56,8 @@ class UserResource(Resource):
         UserService.delete(id)
         return marshal(user, user_fields), 200
     
+    @auth_required('token')
+    @roles_required('admin')
     def patch(self,id):
         user=UserService.get_by_id(id)
         if not user:
@@ -60,13 +67,15 @@ class UserResource(Resource):
         return marshal(user, user_fields), 200
 
 """/api/user -> get, post"""
-@auth_required('token')
-@roles_required('admin')
 class UserListResource(Resource):
+    @auth_required('token')
+    @roles_required('admin')
     def get(self):
         users=UserService.get_all()
         return marshal(users, user_fields), 200
 
+    @auth_required('token')
+    @roles_required('admin')
     def post(self):
         data=request.get_json()
         user=UserService.create(data)

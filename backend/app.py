@@ -20,8 +20,6 @@ def create_app():
     app.register_blueprint(auth_bp)
     #flask restful
     app.register_blueprint(api_bp)
-    from resources.dashboard import dashboard_bp
-    app.register_blueprint(dashboard_bp)
 
     CORS(app, origins=["http://localhost:5173"])  # replace with your frontend URL
     

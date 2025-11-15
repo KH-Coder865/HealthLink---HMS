@@ -10,13 +10,14 @@ treatment_fields = {
     "notes": fields.String,
 }
 
-@auth_required('token')
 class TreatmentResource(Resource):
+    @auth_required('token')
     @roles_accepted('doctor','patient','admin')
     def get(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
         return marshal(treat, treatment_fields), 200
 
+    @auth_required('token')
     @roles_required('doctor')
     def patch(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
@@ -26,6 +27,7 @@ class TreatmentResource(Resource):
         TreatmentService.partial_update(appointment_id, data)
         return marshal(treat, treatment_fields), 200
 
+    @auth_required('token')
     @roles_required('doctor')
     def delete(self, appointment_id):
         treat = TreatmentService.get_by_id(appointment_id)
@@ -34,13 +36,14 @@ class TreatmentResource(Resource):
         TreatmentService.delete(appointment_id)
         return {"message": "Treatment deleted successfully"}, 200
 
-@auth_required('token')
 class TreatmentListResource(Resource):
+    @auth_required('token')
     @roles_accepted('admin','doctor','patient')
     def get(self):
         treats = TreatmentService.get_all()
         return marshal(treats, treatment_fields), 200
 
+    @auth_required('token')
     @roles_accepted('doctor')
     def post(self):
         data = request.get_json()

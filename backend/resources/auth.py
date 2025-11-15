@@ -31,6 +31,7 @@ def login():
         "id": user.id,
         "name": user.name,
         "email": user.email,
+        "role": list(user.roles)[0].name,
         "token": user.get_auth_token()
         }), 200
 
