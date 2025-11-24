@@ -15,6 +15,8 @@ const useUserStore = defineStore("user", {
             }
 
         })(),
+        users: [],
+        singuser: null,
     }),
 
     getters: {
@@ -58,17 +60,46 @@ const useUserStore = defineStore("user", {
             }
             this.setToken(res.token);
             this.setUser(res);
-        }
-,
+        },
+
+        
 
         async loginWithCredentials(endpoint="/auth/login", credentials = {}) {
-        const res = await api.post(endpoint, credentials); // res = { token, id, name, email }
-        if (!res.token) {
-            throw new Error("Login failed: No token received");
-        }
-        this.setToken(res.token);
-        this.setUser(res); // save the full user object
-}
+            const res = await api.post(endpoint, credentials); // res = { token, id, name, email }
+            if (!res.token) {
+                throw new Error("Login failed: No token received");
+            }
+            this.setToken(res.token);
+            this.setUser(res); // save the full user object
+        },
+
+
+        async getAll(){
+            const res=await api.get("/users");
+            this.users=res;
+            return res;
+        },
+        
+        async getbyId(id){
+            const res=await api.get(`/users/${id}`);
+            this.singuser=res;
+            return res;
+        },
+
+        async del(id){
+            const res=await api.delete(`/users/${id}`);
+            return res;
+        },
+
+        async update(id,data){
+            const res=await api.put(`/users/${id}`, data);
+            return res;
+        },
+
+        async edit(id,data){
+            const res=await api.patch(`/users/${id}`, data);
+            return res;
+        },
 
     },
 });

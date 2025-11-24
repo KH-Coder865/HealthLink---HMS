@@ -6,6 +6,7 @@ from flask_login import current_user
 from flask_security.utils import verify_password, hash_password, login_user
 from models import User, db
 from services.patient_service import PatientService
+from services.doctor_service import DocService
 
 from flask import current_app as app
 
@@ -46,6 +47,8 @@ def register():
     password = data.get("password")
     name = data.get("name")
     role = data.get("role")
+
+    print(role,email,password,name,sep='\n')
 
     if not email or not password or not name or role not in ["doctor", "patient"]:
         return jsonify({"message": "invalid input"}), 400
@@ -95,6 +98,12 @@ def register():
         return jsonify({"message": "error creating patient profile"}), 500
 
     token = user.get_auth_token()
+
+    if role=='doctor':
+        return jsonify({
+        "id": user.id,
+        "active": user.active
+    }), 201
 
     return jsonify({
         "id": user.id,

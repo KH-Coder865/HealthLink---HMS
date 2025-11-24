@@ -28,7 +28,8 @@ api.add_resource(PatientResource, '/patients/<int:id>')
 
 # Appointment
 api.add_resource(AppointmentListResource, '/appointments')
-api.add_resource(AppointmentResource, '/appointments/<int:id>')
+api.add_resource(AppointmentResource, '/appointments/<int:id>', endpoint="appt_by_id")
+api.add_resource(AppointmentResource, '/appointment',endpoint="appt_by_query")
 
 # Treatment
 api.add_resource(TreatmentListResource, '/treatments')
@@ -36,4 +37,5 @@ api.add_resource(TreatmentResource, '/treatments/<int:appointment_id>')
 
 # Specialization
 api.add_resource(SpecializationListResource, '/specializations')
-api.add_resource(SpecializationResource, '/specializations/<int:id>')
+api.add_resource(SpecializationResource, '/specializations/<int:id>', endpoint="spec_by_id")
+api.add_resource(SpecializationResource, '/specialization', endpoint="spec_by_query")

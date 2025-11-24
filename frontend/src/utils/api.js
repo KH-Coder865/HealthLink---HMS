@@ -7,14 +7,16 @@ const api = {
         const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
         const url = `${URL}${path}`;
         const token = localStorage.getItem("token");
-        console.log(token)
+
         const headers = {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             ...options.headers,
         };
+
         if (token) {
-            headers['Authentication-Token'] = token;
+            headers["Authentication-Token"] = token;
         }
+
         const config = {
             ...options,
             headers,
@@ -22,45 +24,59 @@ const api = {
 
         try {
             const res = await fetch(url, config);
+
             if (res.status === 401) {
                 alert("Unauthorized! Please login again.");
-                router.push('/login');
+                router.push("/login");
                 throw new Error("Unauthorized");
             }
 
+            if (res.status === 404) {
+                alert("URL not found!");
+                throw new Error("404 Not found");
+            }
+
+            if (res.status === 403) {
+                alert("Access denied! You do not have the required role.");
+                throw new Error("Forbidden");
+            }
+
             if (!res.ok) {
-                const errorData = await res.json();
-                const errorMessage = errorData.message || 'API request failed';
+                let errorMessage = "API request failed";
+                try {
+                    const errorData = await res.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (err) {}
                 throw new Error(errorMessage);
             }
 
-            if (res.status === 204) {
-                return null; // No Content
-            }
+            if (res.status === 204) return null;
+
             const text = await res.text();
             if (!text) return null;
+
             try {
                 return JSON.parse(text);
-            } catch (e) {
-                return text
+            } catch {
+                return text;
             }
-        }
-        catch (e) {
-            return Promise.reject(e);
+
+        } catch (err) {
+            return Promise.reject(err);
         }
     },
 
     get(endpoint, options = {}) {
         return this.request(endpoint, {
             ...options,
-            method: 'GET',
+            method: "GET",
         });
     },
 
     post(endpoint, data = {}, options = {}) {
         return this.request(endpoint, {
             ...options,
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(data),
         });
     },
@@ -68,7 +84,15 @@ const api = {
     put(endpoint, data = {}, options = {}) {
         return this.request(endpoint, {
             ...options,
-            method: 'PUT',
+            method: "PUT",
+            body: JSON.stringify(data),
+        });
+    },
+
+    patch(endpoint, data = {}, options = {}) {
+        return this.request(endpoint, {
+            ...options,
+            method: "PATCH",
             body: JSON.stringify(data),
         });
     },
@@ -76,10 +100,9 @@ const api = {
     delete(endpoint, options = {}) {
         return this.request(endpoint, {
             ...options,
-            method: 'DELETE',
+            method: "DELETE",
         });
-    }
-
+    },
 };
 
 export default api;

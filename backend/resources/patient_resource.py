@@ -3,14 +3,23 @@ from flask_restful import Resource, marshal, fields
 from services import PatientService
 from flask_security import auth_required, roles_accepted, roles_required
 
+credentials = {
+    "id": fields.Integer(attribute=lambda pat: pat.user.id if pat.user else 0),
+    "name": fields.String(attribute=lambda pat: pat.user.name if pat.user else "Unknown"),
+    "email": fields.String(attribute=lambda pat: pat.user.email if pat.user else ""),
+    "active": fields.Boolean(attribute=lambda pat: pat.user.active if pat.user else False),
+}
+
 patient_fields = {
     "id": fields.Integer,
-    "u_id": fields.Integer,
-    "age": fields.Integer,
-    "gender": fields.String,
-    "contact_number": fields.String,
-    "address": fields.String,
-    "emergency_contact": fields.String,
+    "details": fields.Nested(credentials, attribute=lambda pat: pat),
+    "age": fields.Integer(attribute=lambda pat: pat.age if pat else None),
+    "gender": fields.String(attribute=lambda pat: pat.gender if pat else ""),
+    "contact_number": fields.String(attribute=lambda pat: pat.contact_number if pat else ""),
+    "address": fields.String(attribute=lambda pat: pat.address if pat else ""),
+    "emergency_contact": fields.String(attribute=lambda pat: pat.emergency_contact if pat else ""),
+    "created_at": fields.DateTime(attribute=lambda pat: pat.created_at if pat else None),
+    "updated_at": fields.DateTime(attribute=lambda pat: pat.updated_at if pat else None),
 }
 
 

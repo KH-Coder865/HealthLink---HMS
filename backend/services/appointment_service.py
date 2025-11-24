@@ -3,11 +3,31 @@ from services.service_errors import ServiceError
 
 class AppointmentService:
     @staticmethod
-    def get_by_id(id):
-        apt = Appointment.query.filter_by(id=id).first()
-        if not apt:
-            raise ServiceError(f"Appointment with id {id} not found")
-        return apt
+    def get_by_id(id=None,pid=None,did=None):
+        if id:
+            apt = Appointment.query.filter_by(id=id).first()
+            if not apt:
+                raise ServiceError(f"Appointment with id {id} not found")
+            return apt
+        
+        if pid and did:
+            appts=[]
+            appts = Appointment.query.filter_by(patient_id=pid, doctor_id=did).all()
+            return appts
+        
+        if pid:
+            appts = Appointment.query.filter_by(patient_id=pid).all()
+            if not appts:
+                raise ServiceError(f"Appointment with patient id {pid} not found")
+            return appts
+
+        if did:
+            appts = Appointment.query.filter_by(doctor_id=did).all()
+            if not appts:
+                raise ServiceError(f"Appointment with doctor id {did} not found")
+            return appts
+
+
 
     @staticmethod
     def get_all():

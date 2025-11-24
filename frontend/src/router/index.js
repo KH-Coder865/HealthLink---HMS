@@ -5,6 +5,11 @@ import Signup from '@/components/Signup.vue'
 import AdminDash from '@/components/AdminDash.vue'
 import PatientDash from '@/components/PatientDash.vue'
 import DoctorDash from '@/components/DoctorDash.vue'
+import DocAdd from '@/components/DocAdd.vue'
+import PatEdit from '@/components/PatEdit.vue'
+import DocEdit from '@/components/DocEdit.vue'
+import ApptHist from '@/components/ApptHist.vue'
+import Profile from '@/components/Profile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +18,11 @@ const router = createRouter({
     { path: '/login', component: Login },
     { path: '/signup', component: Signup },
     {path: '/adash', component: AdminDash},
+    {path: '/adash/doctor/create', component: DocAdd},
+    {path: '/adash/doctor/:id/edit', component: DocEdit},
+    {path: '/adash/patient/:id/edit', component: PatEdit},
+    {path: '/user/:id/profile', component: Profile},
+    {path: '/adash/appointments', component: ApptHist},
     {path: '/pdash', component: PatientDash},
     {path: '/ddash', component: DoctorDash},
 

@@ -1,4 +1,5 @@
 from models import Specialization, db
+from sqlalchemy import func
 from services.service_errors import ServiceError
 
 class SpecializationService:
@@ -7,6 +8,13 @@ class SpecializationService:
         spec = Specialization.query.filter_by(id=id).first()
         if not spec:
             raise ServiceError(f"Specialization with id {id} not found")
+        return spec
+    
+    @staticmethod
+    def get_by_name(name):
+        spec = Specialization.query.filter_by(name=name).first()
+        if not spec:
+            raise ServiceError(f"Specialization with name {name} not found")
         return spec
 
     @staticmethod

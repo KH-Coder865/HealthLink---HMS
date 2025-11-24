@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource, marshal, fields
 from services import SpecializationService
-from flask_security import auth_required, roles_accepted, roles_required
+from flask_security import auth_required, roles_accepted
 
 specialization_fields = {
     "id": fields.Integer,
@@ -12,8 +12,20 @@ specialization_fields = {
 class SpecializationResource(Resource):
     @auth_required('token')
     @roles_accepted('patient','admin','doctor')
-    def get(self, id):
-        spec = SpecializationService.get_by_id(id)
+    def get(self):
+        spec_id=request.args.get("id", type=int)
+        name=request.args.get("name", type=str)
+
+        if spec_id:
+            spec = SpecializationService.get_by_id(spec_id)
+        elif name:
+            spec = SpecializationService.get_by_name(name)
+        else:
+            return {"message":"id or name required"}, 400
+        
+        if not spec:
+            return {"message": "not found"}
+        
         return marshal(spec, specialization_fields), 200
 
     @auth_required('token')

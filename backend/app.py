@@ -1,4 +1,4 @@
-from flask import Flask, app
+from flask import Flask
 from config import LocalDevelopmentConfig
 from flask_cors import CORS
 
@@ -9,7 +9,6 @@ def create_app():
     app.config.from_object(LocalDevelopmentConfig)
     from models import db, User, Role
     db.init_app(app)
-
     from extentions import security
     from flask_security import SQLAlchemyUserDatastore
     global datastore
@@ -21,8 +20,7 @@ def create_app():
     #flask restful
     app.register_blueprint(api_bp)
 
-    CORS(app, origins=["http://localhost:5173"])  # replace with your frontend URL
-    
+    CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
     with app.app_context():
         db.create_all()
     
