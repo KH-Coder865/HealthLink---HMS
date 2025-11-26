@@ -34,7 +34,7 @@ class AppointmentResource(Resource):
             return marshal(appt, appointment_fields), 200
 
         if pid and did:
-            appts = AppointmentService.get_by_id(pid=pid,did=did)
+            appts = AppointmentService.get_by_id(pid=pid, did=did)
             return marshal(appts, appointment_fields), 200
 
         if pid:

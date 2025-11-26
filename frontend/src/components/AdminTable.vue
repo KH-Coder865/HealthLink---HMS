@@ -36,7 +36,7 @@
 
                         <!-- If empty -->
                         <tr v-if="!items.length && !loading">
-                            <td colspan="2" class="text-muted p-4">
+                            <td colspan="4" class="text-muted p-4">
                                 No {{ emptyLabel }} found.
                                 <button @click="$emit('refresh')" class="btn btn-sm btn-outline-primary">
                                     Refresh
@@ -48,9 +48,8 @@
                         <tr v-else-if="loading">
                             <td colspan="4" class="text-center p-4">
                                 <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                Loading...
+                                    <span class="visually-hidden"></span>
+                                </div>Loading...
                             </td>
                         </tr>
 
@@ -82,21 +81,24 @@
                             <td>
                                 <div class="d-flex justify-content-center gap-2 action-buttons">
 
-                                    <button class="btn btn-warning btn-sm" @click="$emit('edit', item.id)">
+                                    <button v-if="!$route.path.includes('ddash')" class="btn btn-warning btn-sm" @click="$emit('edit', item.id)">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
 
-                                    <button class="btn btn-danger btn-sm" @click="$emit('delete', item.id)">
+                                    <button v-if="!$route.path.includes('ddash')" class="btn btn-danger btn-sm" @click="$emit('delete', item.id)">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
 
                                     <button
+                                        v-if="!$route.path.includes('ddash')"
                                         :class="item.details.active ? 'btn btn-outline-dark btn-sm' : 'btn btn-success btn-sm'"
                                         @click="$emit('toggle', item)">
                                         <i
                                             :class="item.details.active ? 'bi bi-person-fill-slash' : 'bi bi-person-check'"></i>
                                         {{ item.details.active ? 'Blacklist' : 'Un-Blacklist' }}
                                     </button>
+
+                                    <button class="btn btn-success fw-bold" v-if="$route.path.includes('ddash')" @click="$emit('view', {pid: item.id})"><i class="bi bi-eye me-2"></i>View</button>
 
                                 </div>
                             </td>
@@ -162,7 +164,7 @@ export default {
     flex-direction: row;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .mdev {
         margin-left: 3% !important;
     }

@@ -39,7 +39,7 @@ class TreatmentService:
     @staticmethod
     def create(data):
         """Create a new treatment record for an appointment."""
-        allowed_keys = {"appointment_id", "diagnosis", "prescription", "notes"}
+        allowed_keys = {"appointment_id", "diagnosis", "tests_done", "prescription", "notes"}
         clean_data = {k: v for k, v in data.items() if k in allowed_keys}
 
         if "appointment_id" not in clean_data:

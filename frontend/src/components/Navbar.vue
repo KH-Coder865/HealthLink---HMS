@@ -6,23 +6,32 @@
         Hello
       </a>
 
-      <button class="navbar-toggler bg-orange border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <button class="navbar-toggler bg-orange border-0" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navMenu">
         <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navMenu">
 
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <router-link v-if="isAdmin" to="/adash" class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
-              <router-link v-else-if="isPatient" to="/pdash" class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
-              <router-link v-else to="/ddash" class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
-            </li>
+          <li class="nav-item">
+            <router-link v-if="isAdmin" to="/adash"
+              class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
+
+            <router-link v-else-if="isPatient" to="/pdash"
+              class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
+
+            <!-- Doctor dashboard link is PRE-COMPUTED -->
+            <router-link v-else :to="doctorDash"
+              class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
+          </li>
+
           <template v-if="userStore.isAuthenticated">
             <li class="nav-item">
               <router-link to="/" class="nav-link nav-underline text-white fw-semibold">Home</router-link>
             </li>
           </template>
+
           <template v-if="!userStore.isAuthenticated">
             <li class="nav-item">
               <router-link to="/login" class="nav-link nav-underline text-white fw-semibold">Login</router-link>
@@ -34,11 +43,9 @@
         </ul>
 
         <div v-if="userStore.isAuthenticated" class="dropdown ms-2 ms-lg-4">
-          <button 
-            class="btn d-flex align-items-center text-white dropdown-toggle border-0" 
-            type="button" 
+          <button class="btn d-flex align-items-center text-white dropdown-toggle border-0" type="button"
             data-bs-toggle="dropdown">
-            
+
             <i class="bi bi-person-circle"></i>
             <span class="fw-semibold d-none d-sm-inline">{{ displayName }}</span>
           </button>
@@ -46,7 +53,9 @@
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
             <li><router-link to="/" class="dropdown-item" @click="userStore.logout">Logout</router-link></li>
           </ul>
         </div>
@@ -58,33 +67,41 @@
 
 <script>
 import useUserStore from '@/stores/user';
+import useDocStore from '@/stores/doctors';
 
 export default {
   name: 'Navbar',
+
   data() {
     return {
-      userStore: null
+      userStore: useUserStore(),
+      docStore: useDocStore(),
+      doctorDash: "/", // resolved URL stored here
     };
   },
 
-  created() {
-    this.userStore = useUserStore();
+  async created() {
+    if (this.userStore.role === "doctor") {
+      const uid = this.userStore.user.id;
+      const res = await this.docStore.getbyId({ id: null, uid });
+
+      this.doctorDash = `/ddash/${res.id}`;
+    }
   },
 
   computed: {
     isAuthenticated() {
       return this.userStore.isAuthenticated;
-    } ,
-    isAdmin(){
+    },
+    isAdmin() {
       return this.userStore.isAdmin;
     },
-    isPatient(){
+    isPatient() {
       return this.userStore?.user?.role === 'patient';
     },
-    displayName(){
-      if(!this.userStore || !this.userStore) return "Account";
-      return this.userStore.user.name || this.userStore.user.email || "Account";
-    }
+    displayName() {
+      return this.userStore?.user?.name || this.userStore?.user?.email || "Account";
+    },
   }
 };
 </script>

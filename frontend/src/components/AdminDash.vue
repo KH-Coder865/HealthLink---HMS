@@ -1,16 +1,16 @@
 <template>
-    <div class="d-flex mt-2 justify-content-around flex-wrap mb-4">
-        <div class="summary-card text-center bg-primary text-white p-3 rounded">
+    <div class="d-flex mt-2 justify-content-center gap-5 flex-wrap mb-4">
+        <div class="summary-card text-center bg-light p-3 rounded">
             <h5>Total Doctors</h5>
-            <p class="fs-3">{{ docStore.doctors.length }}</p>
+            <p class="fs-2 text-primary fw-bold">{{ docStore.doctors.length }}</p>
         </div>
-        <div class="summary-card text-center bg-success text-white p-3 rounded">
+        <div class="summary-card text-center bg-light p-3 rounded">
             <h5>Total Patients</h5>
-            <p class="fs-3">{{ patientStore.patients.length }}</p>
+            <p class="fs-2 text-success fw-bold">{{ patientStore.patients.length }}</p>
         </div>
-        <div class="summary-card text-center bg-warning text-dark p-3 rounded">
-            <h5>Total Appointments</h5>
-            <p class="fs-3">{{ appointmentStore.appointments.length }}</p>
+        <div class="summary-card text-center bg-light p-3 rounded">
+            <h5>Total Appointments Till Date</h5>
+            <p class="fs-2 text-danger fw-bold">{{ appointmentStore.appointments.length }}</p>
         </div>
     </div>
 
@@ -30,8 +30,8 @@
         @edit="editItem('patient', $event)" @delete="deleteItem('patient', $event)"
         @toggle="toggleBlacklist('patient', $event)" />
 
-    <AppointmentsTable :appointments="appointmentStore.appointments" @refresh="fetchItems('appointment')"
-        @view="router.push({ path: '/adash/appointments', query: $event })" @cancel="cancelAppointment" />
+    <AppointmentsTable @refresh="fetchItems('appointment')"
+        @view="router.push({ path: '/adash_view/appts', query: $event })" @cancel="cancelAppointment" />
 
     <div v-if="loading" class="loader-overlay d-flex flex-column">
         <div class="text-danger pulse fs-1" role="status"><i class="bi bi-heart-pulse-fill"></i></div>
@@ -94,16 +94,20 @@ export default {
             return this.appointmentStore;
         },
 
+
         async cancelAppointment(id) {
             this.loading = true;
             try {
                 await this.appointmentStore.changeStatus(id, "cancelled");
+                // refresh child table immediately
+                this.$refs.apptTable.refreshData();
             } catch (err) {
                 console.error(err);
             } finally {
                 this.loading = false;
             }
         },
+
 
 
         async fetchItems(type) {
@@ -145,7 +149,10 @@ export default {
         async editItem(type, id) {
             const store = this.getStore(type);
             try {
-                await store.getbyId(id);
+                if (type === 'doctor')
+                    await store.getbyId({ id: id, uid: null })
+                else
+                    await store.getbyId(id);
                 this.router.push(`/adash/${type}/${id}/edit`);
             } catch (_) { }
         },
@@ -156,6 +163,9 @@ export default {
             try {
                 await store.del(id);
                 await this.refreshAll();
+
+                if (type === "doctor" && this.doctorSearch) this.filterDoctors();
+                if (type === "patient" && this.patientSearch) this.filterPatients();
             } catch (_) { }
             finally { this.loading = false; }
         },
@@ -170,6 +180,9 @@ export default {
                     await api.patch(`/users/${item.details.id}`, { active: true });
                 }
                 await store.getAll();
+
+                if (type === "doctor" && this.doctorSearch) this.filterDoctors();
+                if (type === "patient" && this.patientSearch) this.filterPatients();
             } catch (_) { }
             finally { this.loading = false; }
         },
@@ -195,5 +208,9 @@ export default {
 .summary-card {
     width: 200px;
     margin: 0.5rem;
+    box-shadow: #e4dbdb 11px 10px 20px 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 </style>

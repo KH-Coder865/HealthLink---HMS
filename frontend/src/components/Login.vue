@@ -47,6 +47,7 @@
 
 <script>
 import useUserStore from '@/stores/user';
+import useDocStore from '@/stores/doctors';
 
 export default {
     name: "Login",
@@ -57,11 +58,13 @@ export default {
             loading: false,
             error: "",
             userStore: null,
+            docStore: null,
         };
     },
 
     created(){
         this.userStore = useUserStore();
+        this.docStore = useDocStore();
     },
 
     methods: {
@@ -80,7 +83,10 @@ export default {
                     this.$router.push('/pdash');
                 }
                 else if(this.userStore.role === 'doctor'){
-                    this.$router.push('/ddash');
+                    const uid=this.userStore.user.id;
+                    const docres=await this.docStore.getbyId({id: null, uid});
+                    const id=docres.id;
+                    this.$router.push(`/ddash/${id}`);
                 }
                 else{
                     throw new Error("Role not Defined!")

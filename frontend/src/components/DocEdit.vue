@@ -26,7 +26,7 @@ export default {
 
     methods: {
         async loadDoc() {
-            const doc = await this.store.getbyId(this.id);
+            const doc = await this.store.getbyId({id: this.id, uid:null});
             return doc;
         },
 

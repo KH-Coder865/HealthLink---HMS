@@ -42,7 +42,7 @@ const useUserStore = defineStore("user", {
                 localStorage.removeItem("user");
             }
         },
-
+        
         logout() {
             this.setToken("");
             this.setUser(null);

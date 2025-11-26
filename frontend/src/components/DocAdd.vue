@@ -46,7 +46,8 @@
           </button>
         </form>
 
-        <div v-if="error" class="alert alert-danger mt-3 w-100 text-center">{{ error }}</div>
+        <div v-if="error && error!=='Doctor Added Succesfully!'" class="alert alert-danger mt-3 w-100 text-center">{{ error }}</div>
+        <div v-else-if="error" class="alert alert-success mt-3 w-100 text-center">{{ error }}</div>
       </div>
     </div>
   </div>

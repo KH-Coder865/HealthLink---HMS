@@ -1,6 +1,6 @@
 import random
 import uuid
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from faker import Faker
 from faker_food import FoodProvider
 from flask_security.utils import hash_password
@@ -13,9 +13,28 @@ fake = Faker()
 fake.add_provider(FoodProvider)
 
 def indian_phone_number():
-    """Generate Indian-style +91 formatted 10-digit number"""
     return f"+91-{random.randint(6000000000, 9999999999)}"
 
+def random_time_slot():
+    """Return a time in either 09:00–12:00 or 16:00–21:00 using 15-minute intervals."""
+    if random.random() < 0.5:
+        hour = random.choice([9, 10, 11, 12])
+    else:
+        hour = random.choice([16, 17, 18, 19, 20, 21])
+    minute = random.choice([0, 15, 30, 45])
+    return time(hour, minute)
+
+def make_genuine_timestamps(appointment_dt, now_dt):
+    if appointment_dt < now_dt:
+        created_before = random.randint(1, 60)
+        created_at = appointment_dt - timedelta(days=created_before, hours=random.randint(0, 12), minutes=random.randint(0,59))
+    else:
+        created_before = random.randint(0, 14)
+        created_at = now_dt - timedelta(days=created_before, hours=random.randint(0, 12), minutes=random.randint(0,59))
+    if created_at > now_dt:
+        created_at = now_dt - timedelta(minutes=random.randint(0, 60))
+    updated_at = created_at
+    return created_at, updated_at
 
 app = create_app()
 
@@ -24,7 +43,6 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    # --- Create Roles ---
     print("🧩 Creating roles...")
     admin_role = Role(name="admin", description="Administrator with full access")
     doctor_role = Role(name="doctor", description="Doctor user with limited admin access")
@@ -32,7 +50,6 @@ with app.app_context():
     db.session.add_all([admin_role, doctor_role, patient_role])
     db.session.commit()
 
-    # --- Create Admin ---
     print("👑 Creating admin user...")
     admin_user = User(
         name="Admin User",
@@ -45,19 +62,80 @@ with app.app_context():
     db.session.add(UserRoles(user_id=admin_user.id, role_id=admin_role.id))
     db.session.commit()
 
-    # --- Create Specializations ---
     print("🏥 Creating specializations...")
     specialization_data = [
-        ("Cardiology", "Heart and blood vessel specialists."),
-        ("Neurology", "Brain and nervous system specialists."),
-        ("Pediatrics", "Child and adolescent care."),
-        ("Orthopedics", "Bone and joint specialists."),
-        ("Dermatology", "Skin care specialists."),
-        ("Psychiatry", "Mental health professionals."),
-        ("Ophthalmology", "Eye and vision specialists."),
-        ("Oncology", "Cancer specialists."),
-        ("Radiology", "Medical imaging experts."),
-        ("General Medicine", "General health practitioners."),
+        (
+            "Cardiology",
+            "Cardiology focuses on disorders of the heart and blood vessels. This department "
+            "manages conditions such as coronary artery disease, arrhythmias, heart failure, "
+            "valvular heart disease, and hypertension. Cardiologists provide diagnostic tests "
+            "including ECG, echocardiograms, stress tests, and angiography, and offer both "
+            "medical and interventional treatments to improve cardiovascular health."
+        ),
+        (
+            "Neurology",
+            "Neurology is dedicated to diagnosing and treating disorders of the brain, spinal cord, "
+            "and peripheral nerves. Neurologists manage conditions like epilepsy, migraines, stroke, "
+            "Parkinson’s disease, neuropathies, and multiple sclerosis. Care includes neurological "
+            "exams, imaging studies, electrophysiological testing, and long-term management of "
+            "chronic neurological illnesses."
+        ),
+        (
+            "Pediatrics",
+            "Pediatrics deals with the medical care of infants, children, and adolescents. Pediatricians "
+            "provide preventive care, routine vaccinations, developmental monitoring, and treatment "
+            "of infections, allergies, nutritional issues, and childhood disorders. The department "
+            "focuses on both the physical and emotional well-being of children at all stages of growth."
+        ),
+        (
+            "Orthopedics",
+            "Orthopedics specializes in the diagnosis and treatment of musculoskeletal conditions "
+            "including fractures, joint problems, arthritis, sports injuries, spinal disorders, and "
+            "congenital deformities. Treatment options include physical therapy, medications, minimally "
+            "invasive procedures, and surgical interventions such as joint replacement."
+        ),
+        (
+            "Dermatology",
+            "Dermatology handles diseases of the skin, hair, and nails. This includes acne, eczema, "
+            "psoriasis, fungal infections, pigmentation issues, and skin cancers. Dermatologists "
+            "provide both medical and cosmetic treatments including laser therapy, biopsies, and "
+            "advanced skincare procedures tailored to individual needs."
+        ),
+        (
+            "Psychiatry",
+            "Psychiatry is concerned with the diagnosis, treatment, and prevention of mental, emotional, "
+            "and behavioral disorders. Psychiatrists manage depression, anxiety, bipolar disorder, "
+            "schizophrenia, trauma-related disorders, and substance-use problems using therapy, "
+            "counseling, and medications tailored to each patient."
+        ),
+        (
+            "Ophthalmology",
+            "Ophthalmology deals with eye and vision care. This includes diagnosing and treating "
+            "cataracts, glaucoma, refractive errors, retinal disorders, infections, and trauma. "
+            "Ophthalmologists perform vision assessments, prescribe corrective lenses, and offer "
+            "medical or surgical eye treatments."
+        ),
+        (
+            "Oncology",
+            "Oncology focuses on the diagnosis and treatment of cancer. Oncologists specialize in "
+            "medical, radiation, and surgical treatments depending on the cancer type. The department "
+            "also manages chemotherapy, immunotherapy, targeted therapy, and cancer follow-ups, as well "
+            "as providing supportive and palliative care."
+        ),
+        (
+            "Radiology",
+            "Radiology uses advanced imaging techniques to diagnose and monitor diseases. Specialists "
+            "interpret X-rays, CT scans, MRI scans, ultrasounds, and PET scans. Radiologists support "
+            "nearly every medical department by providing accurate imaging-based diagnosis and "
+            "image-guided procedures."
+        ),
+        (
+            "General Medicine",
+            "General Medicine provides primary care services, managing common illnesses, infections, "
+            "chronic diseases like diabetes and hypertension, and overall preventive healthcare. "
+            "Internal medicine physicians evaluate symptoms, order diagnostic tests, and coordinate "
+            "with specialty departments when necessary."
+        ),
     ]
 
     specializations = []
@@ -67,10 +145,9 @@ with app.app_context():
         specializations.append(sp)
     db.session.commit()
 
-    # --- Create Doctors ---
     print("🩺 Creating doctors...")
     doctors = []
-    for i in range(10):
+    for i in range(20):
         user = User(
             name=fake.name(),
             email=f"doctor{i+1}@hospital.com",
@@ -78,15 +155,16 @@ with app.app_context():
             fs_uniquifier=str(uuid.uuid4())
         )
         db.session.add(user)
-        db.session.flush()  # assign user.id
-
+        db.session.flush()
         db.session.add(UserRoles(user_id=user.id, role_id=doctor_role.id))
 
         specialization = random.choice(specializations)
-        availability = {
-            day: [f"{random.randint(8, 12)}:00", f"{random.randint(13, 18)}:00"]
-            for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        }
+        availability = {}
+        for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
+            availability[day] = {
+                "morning": random.choice([0, 1]),
+                "day": random.choice([0, 1])
+            }
 
         doctor = Doctor(
             u_id=user.id,
@@ -99,7 +177,6 @@ with app.app_context():
 
     db.session.commit()
 
-    # --- Create Patients ---
     print("🧍 Creating patients...")
     genders = ["Male", "Female", "Other"]
     patients = []
@@ -112,7 +189,6 @@ with app.app_context():
         )
         db.session.add(user)
         db.session.flush()
-
         db.session.add(UserRoles(user_id=user.id, role_id=patient_role.id))
 
         patient = Patient(
@@ -128,116 +204,81 @@ with app.app_context():
 
     db.session.commit()
 
-    # --- Create Appointments & Treatments with guaranteed history ---
     print("📅 Creating appointments and treatments...")
+    now_utc = datetime.now(timezone.utc)
+    doctor_schedule = {doc.id: {} for doc in doctors}  # track doctor appointments
 
-    statuses = ["scheduled", "completed", "cancelled"]
+    def get_unique_appointment(doctor_id, start_date, end_date):
+        """Generate a time slot that does not collide with existing appointments of the doctor."""
+        date = start_date
+        while date <= end_date:
+            if date not in doctor_schedule[doctor_id]:
+                doctor_schedule[doctor_id][date] = set()
+            available_slots = []
+            for h in range(9,13):
+                for m in [0,15,30,45]:
+                    available_slots.append(time(h,m))
+            for h in range(16,22):
+                for m in [0,15,30,45]:
+                    available_slots.append(time(h,m))
+            free_slots = [t for t in available_slots if t not in doctor_schedule[doctor_id][date]]
+            if free_slots:
+                chosen_time = random.choice(free_slots)
+                doctor_schedule[doctor_id][date].add(chosen_time)
+                return date, chosen_time
+            date += timedelta(days=1)
+        # fallback
+        return start_date, time(9,0)
 
-    # Track previous doctor-patient pairs
-    previous_meetings = set()
-
-    # Step 1: Ensure every patient has at least 1 completed + 1 scheduled appointment with a doctor
+    # create past completed appointments
     for patient in patients:
-        doctor = random.choice(doctors)
+        doctor = random.choice(doctors)  # choose doctor once per patient
+        completed_date = now_utc.date() - timedelta(days=random.randint(1,180))
+        completed_date, completed_time = get_unique_appointment(doctor.id, completed_date, completed_date)
+        completed_dt = datetime.combine(completed_date, completed_time).replace(tzinfo=timezone.utc)
+        created_at, updated_at = make_genuine_timestamps(completed_dt, now_utc)
 
-        # Completed appointment
-        completed_date = datetime.now().date() - timedelta(days=random.randint(1, 180))
-        completed_time = time(random.randint(8, 18), random.choice([0, 15, 30, 45]))
-        completed_appt = Appointment(
+        appt = Appointment(
             doctor_id=doctor.id,
             patient_id=patient.id,
             appointment_date=completed_date,
             appointment_time=completed_time,
-            status="completed"
+            status="completed",
+            created_at=created_at,
+            updated_at=updated_at
         )
-        db.session.add(completed_appt)
+        db.session.add(appt)
         db.session.flush()
 
-        # Create treatment for completed appointment
-        diagnosis = random.choice([
-            "Common Cold", "Hypertension", "Allergic Rhinitis",
-            "Migraine", "Type 2 Diabetes", "Anxiety Disorder",
-            "Back Pain", "Asthma", "Gastritis", "Arthritis"
-        ])
-        prescription = [
-            {"med": fake.word().capitalize(), "dose": f"{random.randint(100,500)}mg", "duration": f"{random.randint(3,10)} days"},
-            {"med": fake.dish(), "dose": "Diet Recommendation", "duration": "Lifestyle"}
-        ]
-        tests_done = random.choice(["ECG", "MRI", "CT Scan", "Blood Test", "X-Ray", "None"])
         treatment = Treatment(
-            appointment_id=completed_appt.id,
-            diagnosis=diagnosis,
-            prescription=prescription,
-            tests_done=tests_done,
-            notes=fake.paragraph(nb_sentences=3)
+            appointment_id=appt.id,
+            diagnosis=random.choice(["Common Cold", "Hypertension", "Migraine", "Diabetes"]),
+            prescription=[{"med": fake.word().capitalize(), "dose": f"{random.randint(50,500)}mg", "duration": f"{random.randint(3,10)} days", "timing":"1-0-1"}],
+            tests_done=random.choice(["ECG","MRI","Blood Test","None"]),
+            notes=fake.paragraph(nb_sentences=3),
+            created_at=created_at,
+            updated_at=updated_at
         )
         db.session.add(treatment)
 
-        # Scheduled appointment
-        future_date = datetime.now().date() + timedelta(days=random.randint(1, 30))
-        future_time = time(random.randint(8, 18), random.choice([0, 15, 30, 45]))
-        scheduled_appt = Appointment(
+        # create future scheduled appointment for the SAME doctor
+        start_date = now_utc.date() + timedelta(days=1)
+        end_date = now_utc.date() + timedelta(days=7)
+        scheduled_date, scheduled_time = get_unique_appointment(doctor.id, start_date, end_date)
+        scheduled_dt = datetime.combine(scheduled_date, scheduled_time).replace(tzinfo=timezone.utc)
+        created_at, updated_at = make_genuine_timestamps(scheduled_dt, now_utc)
+
+        appt = Appointment(
             doctor_id=doctor.id,
             patient_id=patient.id,
-            appointment_date=future_date,
-            appointment_time=future_time,
-            status="scheduled"
+            appointment_date=scheduled_date,
+            appointment_time=scheduled_time,
+            status="scheduled",
+            created_at=created_at,
+            updated_at=updated_at
         )
-        db.session.add(scheduled_appt)
+        db.session.add(appt)
 
-        previous_meetings.add((doctor.id, patient.id))
-
-    # Step 2: Create additional random appointments
-    for _ in range(200):
-        # Randomly pick a doctor-patient pair
-        if previous_meetings and random.random() < 0.3:
-            # Repeat a previous pair for completed appointment
-            doctor_id, patient_id = random.choice(list(previous_meetings))
-            status = "completed"
-        else:
-            doctor = random.choice(doctors)
-            patient = random.choice(patients)
-            doctor_id = doctor.id
-            patient_id = patient.id
-            status = random.choices(statuses, weights=[0.3, 0.6, 0.1])[0]
-
-            if status == "completed":
-                previous_meetings.add((doctor_id, patient_id))
-
-        days_ago = random.randint(0, 180)
-        appt_date = datetime.now().date() - timedelta(days=days_ago)
-        appt_time = time(random.randint(8, 18), random.choice([0, 15, 30, 45]))
-
-        appointment = Appointment(
-            doctor_id=doctor_id,
-            patient_id=patient_id,
-            appointment_date=appt_date,
-            appointment_time=appt_time,
-            status=status
-        )
-        db.session.add(appointment)
-        db.session.flush()
-
-        if status == "completed":
-            diagnosis = random.choice([
-                "Common Cold", "Hypertension", "Allergic Rhinitis",
-                "Migraine", "Type 2 Diabetes", "Anxiety Disorder",
-                "Back Pain", "Asthma", "Gastritis", "Arthritis"
-            ])
-            prescription = [
-                {"med": fake.word().capitalize(), "dose": f"{random.randint(100,500)}mg", "duration": f"{random.randint(3,10)} days"},
-                {"med": fake.dish(), "dose": "Diet Recommendation", "duration": "Lifestyle"}
-            ]
-            tests_done = random.choice(["ECG", "MRI", "CT Scan", "Blood Test", "X-Ray", "None"])
-            treatment = Treatment(
-                appointment_id=appointment.id,
-                diagnosis=diagnosis,
-                prescription=prescription,
-                tests_done=tests_done,
-                notes=fake.paragraph(nb_sentences=3)
-            )
-            db.session.add(treatment)
 
     db.session.commit()
-
     print("✅ Database successfully seeded with Admin, Doctors, Patients, Appointments & Treatments.")

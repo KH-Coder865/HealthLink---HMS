@@ -4,10 +4,16 @@ from services.service_errors import ServiceError
 
 class DocService:
     @staticmethod
-    def get_by_id(id):
-        doc = Doctor.query.filter_by(id=id).first()
-        if not doc:
-            raise ServiceError(f"Doctor with id {id} not found")
+    def get_by_id(id=None, uid=None):
+        if id:
+            doc = Doctor.query.filter_by(id=id).first()
+            if not doc:
+                raise ServiceError(f"Doctor with id {id} not found")
+        if uid:
+            doc = Doctor.query.filter_by(u_id=uid).first()
+            if not doc:
+                raise ServiceError(f"Doctor with user id {uid} not found")
+        
         return doc
 
     @staticmethod
@@ -49,8 +55,8 @@ class DocService:
 
 
 
-    @staticmethod
-    def create(data):
+    @classmethod
+    def create(cls,data):
         allowed_keys = {"u_id", "specialization_id", "availability", "contact_number"}
         clean_data = {k: v for k, v in data.items() if k in allowed_keys}
         print("CLEAN DATA", data)
@@ -61,3 +67,4 @@ class DocService:
         doc = Doctor(**clean_data)
         db.session.add(doc)
         db.session.commit()
+        return cls.get_by_id(doc.id)

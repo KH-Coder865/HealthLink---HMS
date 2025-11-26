@@ -34,9 +34,17 @@ doctor_fields = {
 class DoctorResource(Resource):
     @auth_required('token')
     @roles_accepted('doctor', 'admin')
-    def get(self, id):
-        doc = DocService.get_by_id(id)
-        return marshal(doc, doctor_fields), 200
+    def get(self):
+        uid= request.args.get("uid", type=int)
+        id= request.args.get("id",type=int)
+
+        if id:
+            doc = DocService.get_by_id(id=id)
+            return marshal(doc, doctor_fields), 200
+        
+        if uid:
+            doc = DocService.get_by_id(uid=uid)
+            return marshal(doc, doctor_fields), 200
 
     @auth_required('token')
     @roles_accepted('doctor', 'admin')

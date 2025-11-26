@@ -1,7 +1,7 @@
 <template>
     <div class="ms-4 d-flex justify-content-center overflow-hidden mt-4">
         <div class="entity-card">
-            <div class="card-header p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
+            <div class="card-header rounded-2 p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
                 <span><i class="bi bi-hourglass-split me-2"></i>Patient History</span>
                 
                 <i class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
@@ -18,6 +18,7 @@
                     <thead class="table-light sticky-top z-0">
                         <tr>
                             <th>Visit No.</th>
+                            <th>Visit Date</th>
                             <th>Tests Done</th>
                             <th>Diagnosis</th>
                             <th>Medicines</th>
@@ -38,6 +39,7 @@
                         <template v-else v-for="(v,i) in info" :key="v.id">
                             <tr>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ i + 1 }}</td>
+                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ formDate(v.appointment_date) }}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.tests_done }}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.diagnosis }}</td>
                                 <td>{{ v?.treatment?.prescription?.[0]?.med }}</td>
@@ -152,11 +154,19 @@ export default {
     methods: {
         async refresh() {
             const apptStore = useAppointmentStore();
-            const res = await apptStore.getHist({
+            const res = await apptStore.getAllbyIds({
                 pid: this.pid,
                 did: this.did,
+                status: 'completed',
             });
             this.info = res;
+            console.log(res);
+        },
+
+        formDate(date) {
+            const arr= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const d=date.split('-')
+            return `${d[2]}th ${arr[d[1]-1]}, ${d[0]}`;
         }
     },
 
@@ -167,7 +177,7 @@ export default {
         const docStore = useDocStore();
         const patStore = usePatientStore();
 
-        this.doc = await docStore.getbyId(this.did);
+        this.doc = await docStore.getbyId({id: this.did, uid: null});
         this.pat = await patStore.getbyId(this.pid);
     },
 
@@ -175,6 +185,6 @@ export default {
         this.loading=true
         await this.refresh();
         this.loading=false
-    }
+    },
 };
 </script>

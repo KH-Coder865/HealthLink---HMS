@@ -21,7 +21,7 @@ const useAppointmentStore = defineStore("appointments", {
         },
 
         async getById(id) {
-            const res = await api.get(`/appointments/${id}`);
+            const res = await api.get(`/appointment?id=${id}`);
             this.single = res;
             return res;
         },
@@ -32,10 +32,18 @@ const useAppointmentStore = defineStore("appointments", {
             return res;
         },
 
-        async getHist({ pid = null, did = null }) {
+        async getAllbyIds({ pid = null, did = null, status = null }) {
             try {
-                const res = await api.get(`/appointment?pid=${pid}&did=${did}`);
-                const finres = res.filter(a => a.status === 'completed');
+                let res=null;
+                if(pid!==null && did!==null)
+                    res = await api.get(`/appointment?pid=${pid}&did=${did}`);
+                else if(pid)
+                    res = await api.get(`/appointment?pid=${pid}`);
+                else if(did)
+                    res = await api.get(`/appointment?did=${did}`);
+                else
+                    throw new Error("PID or DID not found!")
+                const finres = res.filter(a => a.status === status);
                 return finres;
             } catch (err) {
                 console.error("Failed to fetch history:", err);
@@ -44,6 +52,13 @@ const useAppointmentStore = defineStore("appointments", {
         },
 
         async update(id, data) {
+            if("treatment" in data) {
+                const tdat={
+                    appointment_id: id,
+                    ...data['treatment']
+                }
+                await api.post('/treatments', tdat)
+            }
             const res = await api.patch(`/appointments/${id}`, data);
             await this.getAll();
             return res;

@@ -17,15 +17,19 @@ const useDocStore = defineStore("doctor", {
             return res;
         },
 
-        async getbyId(id) {
-            const res = await api.get(`/doctors/${id}`);
+        async getbyId({id=null,uid=null}) {
+            let res=null;
+            if(id)
+                res = await api.get(`/doctor?id=${id}`);
+            else if(uid)
+                res = await api.get(`/doctor?uid=${uid}`);
             this.singdoc = res;
             return res;
         },
 
         async del(id) {
             const userStore=useUserStore();
-            const docres=await api.get(`/doctors/${id}`);
+            const docres=await api.get(`/doctor?id=${id}`);
             const res= await userStore.del(docres.details.id);
             await this.getAll();
             return res;
@@ -33,6 +37,7 @@ const useDocStore = defineStore("doctor", {
 
         async update(id, data) {
             let specId = null;
+            let doctorData = null;
 
             if (data.specialization) {
                 try {
@@ -43,20 +48,28 @@ const useDocStore = defineStore("doctor", {
                     specId = specCreate.id;
                 }
             }
-
-            const doctorData = {
-                specialization_id: specId,
-                contact_number: data.contact_number,
-            };
-
-            const userData = {
-                name: data.name,
-                email: data.email,
-            };
-            if (data.password) userData.password = data.password;
-            const docres = await this.getbyId(id);
-            await api.patch(`/doctors/${id}`, doctorData);
-            await api.patch(`/users/${docres.details.id}`, userData);
+            if(data.availability) {
+                doctorData = {
+                    availability: data.availability,
+                };
+            }
+            else {
+                doctorData = {
+                    specialization_id: specId,
+                    contact_number: data.contact_number,
+                };
+            }
+            const docres = await this.getbyId({id,uid:null});
+            const res=await api.patch(`/doctors/${id}`, doctorData);
+            this.singdoc=res;
+            if(data.name && data.email) {
+                const userData = {
+                    name: data.name,
+                    email: data.email,
+                };
+                if (data.password) userData.password = data.password;
+                await api.patch(`/users/${docres.details.id}`, userData);
+            }
 
             await this.getAll();
         },
@@ -67,8 +80,9 @@ const useDocStore = defineStore("doctor", {
             let specid = null
 
             try {
-                const specres = await api.get(`/specializations?name=${spec}`)
+                const specres = await api.get(`/specialization?name=${spec}`)
                 specid = specres.id
+                console.log(specid)
             } catch {
                 const specreate = await api.post('/specializations', { name: spec, description: spec })
                 specid = specreate.id
@@ -103,7 +117,7 @@ const useDocStore = defineStore("doctor", {
         async blacklist(id) {
             const userStore=useUserStore();
 
-            const doctor = await this.getbyId(id);
+            const doctor = await this.getbyId({id,uid:null});
 
             const userId = doctor.details.id;   // u_id correctly returned
 
