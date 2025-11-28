@@ -46,25 +46,35 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 import useUserStore from '@/stores/user';
 import useDocStore from '@/stores/doctors';
+import usePatientStore from '@/stores/patients';
 
 export default {
     name: "Login",
-    data(){
+    data() {
         return {
             email: "",
             password: "",
             loading: false,
             error: "",
+            router: "",
             userStore: null,
             docStore: null,
+            patStore: null,
         };
     },
 
-    created(){
+    created() {
         this.userStore = useUserStore();
         this.docStore = useDocStore();
+        this.patStore = usePatientStore();
+        this.router = useRouter();
+        const tok = localStorage.getItem("token");
+        if(tok)
+            this.router.replace('/');
+
     },
 
     methods: {
@@ -80,7 +90,10 @@ export default {
                     this.$router.push('/adash');
                 }
                 else if(this.userStore.role === 'patient'){
-                    this.$router.push('/pdash');
+                    const uid=this.userStore.user.id;
+                    const patres=await this.patStore.getbyId({id: null, uid});
+                    const id=patres.id;
+                    this.$router.push(`/pdash?id=${id}`);
                 }
                 else if(this.userStore.role === 'doctor'){
                     const uid=this.userStore.user.id;

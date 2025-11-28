@@ -27,7 +27,7 @@ export default {
 
     methods: {
         async loadPatient() {
-            const pt = await this.store.getbyId(this.id);
+            const pt = await this.store.getbyId({id:this.id, uid: null});
             return pt;
         },
 

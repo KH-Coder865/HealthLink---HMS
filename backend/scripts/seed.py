@@ -159,11 +159,15 @@ with app.app_context():
         db.session.add(UserRoles(user_id=user.id, role_id=doctor_role.id))
 
         specialization = random.choice(specializations)
+        today = datetime.now().date()
         availability = {}
-        for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]:
-            availability[day] = {
-                "morning": random.choice([0, 1]),
-                "day": random.choice([0, 1])
+
+        for k in range(7):
+            d = today + timedelta(days=k)
+            key = d.strftime("%Y-%m-%d")
+            availability[key] = {
+                "morning": 0,
+                "evening": 0
             }
 
         doctor = Doctor(

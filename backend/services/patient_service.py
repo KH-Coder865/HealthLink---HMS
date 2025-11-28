@@ -7,11 +7,17 @@ class PatientService:
         return Patient.query.all()
 
     @staticmethod
-    def get_by_id(id):
-        patient = Patient.query.get(id)
-        if not patient:
-            raise ServiceError(f"Patient with id {id} not found")
-        return patient
+    def get_by_id(id=None, uid=None):
+        if id:
+            pat = Patient.query.filter_by(id=id).first()
+            if not pat:
+                raise ServiceError(f"Patient with id {id} not found")
+        if uid:
+            pat = Patient.query.filter_by(u_id=uid).first()
+            if not pat:
+                raise ServiceError(f"Patient with user id {uid} not found")
+        
+        return pat
 
     @staticmethod
     def create(data):

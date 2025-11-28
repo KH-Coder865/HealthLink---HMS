@@ -12,12 +12,12 @@
                     <thead class="table-light sticky-top z-0">
                         <tr>
                             <th>#ID</th>
-                            <th>Patient</th>
+                            <th v-if="!$route.path.includes('pdash')">Patient</th>
                             <th v-if="!$route.path.includes('ddash')">Doctor</th>
                             <th v-if="!$route.path.includes('ddash')">Department</th>
-                            <th v-if="$route.path.includes('ddash')">Date</th>
-                            <th v-if="$route.path.includes('ddash')">Time</th>
-                            <th>Patient History</th>
+                            <th v-if="!$route.path.includes('adash')">Date</th>
+                            <th v-if="!$route.path.includes('adash')">Time</th>
+                            <th v-if="!$route.path.includes('pdash')">Patient History</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -42,30 +42,38 @@
 
                         <tr v-for="a in mappedAppointments" :key="a.id">
                             <td>{{ a.id }}</td>
-                            <td>{{ a.patientName }}</td>
+                            <td v-if="!$route.path.includes('pdash')">{{ a.patientName }}</td>
                             <td v-if="!$route.path.includes('ddash')">{{ a.doctorName }}</td>
                             <td v-if="!$route.path.includes('ddash')">{{ a.department }}</td>
-                            <td v-if="$route.path.includes('ddash')">{{ a.dt }}</td>
-                            <td v-if="$route.path.includes('ddash')">{{ a.time }}</td>
+                            <td v-if="!$route.path.includes('adash')">{{ a.dt }}</td>
+                            <td v-if="!$route.path.includes('adash')">{{ a.time }}</td>
 
-                            <td>
-                                <button v-if="(!(a.id in isComp))||(a.id in isComp && !isComp[a.id])" class="btn btn-success btn-sm fw-bold"
+                            <td v-if="!$route.path.includes('pdash')">
+                                <button
+                                    v-if="!$route.path.includes('pdash') && ((!(a.id in isComp)) || (a.id in isComp && !isComp[a.id]))"
+                                    class="btn btn-success btn-sm fw-bold"
                                     @click="$emit('view', { pid: a.pid, did: a.did })">
                                     <i class="bi bi-eye"></i>&nbsp;View
                                 </button>
-                                <button v-else-if="$route.path.includes('ddash') && a.id in isComp && isComp[a.id]" class="btn btn-outline-primary me-2 btn-sm fw-bold text-wrap" @click="$router.push(`/ddash/appts/update?pid=${a.pid}&did=${a.did}&aid=${a.id}`)">
+                                <button v-else-if="$route.path.includes('ddash') && a.id in isComp && isComp[a.id]"
+                                    class="btn btn-outline-primary me-2 btn-sm fw-bold text-wrap"
+                                    @click="$router.push(`/ddash/appts/update?pid=${a.pid}&did=${a.did}&aid=${a.id}`)">
                                     <i class="bi-arrow-repeat"></i>&nbsp;Update History
                                 </button>
                             </td>
 
                             <td class="d-flex gap-1 flex-sm-wrap">
-                                <button v-if="$route.path.includes('ddash')" class="btn btn-outline-success me-2 btn-sm fw-bold text-wrap" @click="isComp[a.id]=true">
+                                <button v-if="$route.path.includes('ddash')"
+                                    class="btn btn-outline-success me-2 btn-sm fw-bold text-wrap"
+                                    @click="isComp[a.id] = true">
                                     <i class="bi bi-check2-circle"></i>&nbsp;Mark as Completed
                                 </button>
+
                                 <button class="btn btn-danger btn-sm fw-bold" @click="$emit('cancel', a.id)">
                                     <i class="bi bi-x-circle"></i>&nbsp;Cancel
                                 </button>
                             </td>
+
                         </tr>
                     </tbody>
 
@@ -119,7 +127,14 @@ export default {
                 return apptStore.appointments.filter(
                     a => a.doctor_id == did && a.status === "scheduled"
                 );
-            } else {
+            }
+            else if (this.$route.path.includes("pdash")) {
+                const pid = this.$route.query.id;
+                return apptStore.appointments.filter(
+                    a => a.patient_id == pid && a.status === "scheduled"
+                );
+            }
+            else {
                 // For other views (e.g., Admin), use the store's reactive getter
                 return apptStore.upcoming;
             }
@@ -164,22 +179,22 @@ export default {
                 patStore.getAll(),
                 apptStore.getAll(),
             ]);
-            
+
             // The table will automatically update now because `sourceAppointments`
             // and `mappedAppointments` are computed properties based on the store.
-            
+
             this.isLoading = false;
         },
 
         formTime(time) {
-            let a=time.split(':')
+            let a = time.split(':')
             return `${a[0]}:${a[1]} IST`
         },
 
         formDate(date) {
-            const arr= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const d=date.split('-')
-            return `${d[2]}th ${arr[d[1]-1]}, ${d[0]}`;
+            const arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const d = date.split('-')
+            return `${d[2]}th ${arr[d[1] - 1]}, ${d[0]}`;
         }
     }
 };

@@ -149,7 +149,7 @@ export default {
         async editItem(type, id) {
             const store = this.getStore(type);
             try {
-                if (type === 'doctor')
+                if (type === 'doctor' || type === 'patient')
                     await store.getbyId({ id: id, uid: null })
                 else
                     await store.getbyId(id);

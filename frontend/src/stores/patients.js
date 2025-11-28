@@ -15,15 +15,19 @@ const usePatientStore = defineStore("patient", {
             return res;
         },
 
-        async getbyId(id) {
-            const res = await api.get(`/patients/${id}`);
+        async getbyId({ id = null, uid = null }) {
+            let res = null;
+            if (id)
+                res = await api.get(`/patient?id=${id}`);
+            else if (uid)
+                res = await api.get(`/patient?uid=${uid}`);
             this.singpat = res;
             return res;
         },
 
         async del(id) {
             const userStore = useUserStore();
-            const patres = await api.get(`/patients/${id}`);
+            const patres = await api.get(`/patient?id=${id}`);
             const res = await userStore.del(patres.details.id);
             await this.getAll();
             return res;
@@ -43,7 +47,7 @@ const usePatientStore = defineStore("patient", {
             };
             if (data.password) userData.password = data.password;
 
-            const patres = await this.getbyId(id);
+            const patres = await this.getbyId({id, uid:null});
             await api.patch(`/patients/${id}`, patientData);
             await api.patch(`/users/${patres.details.id}`, userData);
 
@@ -58,7 +62,7 @@ const usePatientStore = defineStore("patient", {
 
         async blacklist(id) {
             const userStore = useUserStore();
-            const patient = await this.getbyId(id);
+            const patient = await this.getbyId({id, uid: null});
             const userId = patient.details.id;
 
             await userStore.edit(userId, {

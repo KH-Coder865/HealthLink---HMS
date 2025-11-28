@@ -25,7 +25,8 @@ api.add_resource(DoctorResource, '/doctor',endpoint='doc_by_query')
 
 # Patient
 api.add_resource(PatientListResource, '/patients')
-api.add_resource(PatientResource, '/patients/<int:id>')
+api.add_resource(PatientResource, '/patients/<int:id>',endpoint='pat_by_id')
+api.add_resource(PatientResource, '/patient',endpoint='pat_by_query')
 
 # Appointment
 api.add_resource(AppointmentListResource, '/appointments')

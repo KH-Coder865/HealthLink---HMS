@@ -17,20 +17,30 @@ const useDocStore = defineStore("doctor", {
             return res;
         },
 
-        async getbyId({id=null,uid=null}) {
-            let res=null;
-            if(id)
+        async getbyId({ id = null, uid = null }) {
+            let res = null;
+            if (id)
                 res = await api.get(`/doctor?id=${id}`);
-            else if(uid)
+            else if (uid)
                 res = await api.get(`/doctor?uid=${uid}`);
             this.singdoc = res;
             return res;
         },
 
+        async getbySpec(sid) {
+            try {
+                const res= await api.get(`/specialization?id=${sid}`);
+                console.log("in store=", res)
+                this.doctors= res.doctors;
+            } catch(e) {
+                console.log("ERROR: Cannot fetch")
+            }
+        },
+
         async del(id) {
-            const userStore=useUserStore();
-            const docres=await api.get(`/doctor?id=${id}`);
-            const res= await userStore.del(docres.details.id);
+            const userStore = useUserStore();
+            const docres = await api.get(`/doctor?id=${id}`);
+            const res = await userStore.del(docres.details.id);
             await this.getAll();
             return res;
         },
@@ -48,7 +58,7 @@ const useDocStore = defineStore("doctor", {
                     specId = specCreate.id;
                 }
             }
-            if(data.availability) {
+            if (data.availability) {
                 doctorData = {
                     availability: data.availability,
                 };
@@ -59,19 +69,19 @@ const useDocStore = defineStore("doctor", {
                     contact_number: data.contact_number,
                 };
             }
-            const docres = await this.getbyId({id,uid:null});
-            const res=await api.patch(`/doctors/${id}`, doctorData);
-            this.singdoc=res;
-            if(data.name && data.email) {
+            const docres = await this.getbyId({ id, uid: null });
+            const res = await api.patch(`/doctors/${id}`, doctorData);
+            this.singdoc = res;
+            if (data.name) {
                 const userData = {
                     name: data.name,
-                    email: data.email,
                 };
                 if (data.password) userData.password = data.password;
                 await api.patch(`/users/${docres.details.id}`, userData);
             }
 
             await this.getAll();
+            this.singdoc = refreshed;
         },
 
 
@@ -95,7 +105,7 @@ const useDocStore = defineStore("doctor", {
                 role: 'doctor'
             }
 
-            let docdata=null
+            let docdata = null
             try {
                 docdata = await api.post('/auth/register', userPayload)
             } catch (error) {
@@ -115,9 +125,9 @@ const useDocStore = defineStore("doctor", {
         },
 
         async blacklist(id) {
-            const userStore=useUserStore();
+            const userStore = useUserStore();
 
-            const doctor = await this.getbyId({id,uid:null});
+            const doctor = await this.getbyId({ id, uid: null });
 
             const userId = doctor.details.id;   // u_id correctly returned
 

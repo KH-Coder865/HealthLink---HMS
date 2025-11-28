@@ -12,6 +12,7 @@ import ApptHist from '@/components/ApptHist.vue'
 import Profile from '@/components/Profile.vue'
 import UpdateHistory from '@/components/UpdHist.vue' 
 import DocAvail from '@/components/DocAvail.vue'
+import DocbySpec from '@/components/DocbySpec.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,8 +25,9 @@ const router = createRouter({
     {path: '/adash/doctor/:id/edit', component: DocEdit},
     {path: '/adash/patient/:id/edit', component: PatEdit},
     {path: '/user/:id/profile', component: Profile},
+    {path: '/pdash/:id/docs', component: DocbySpec},
     {path: '/:name/appts', component: ApptHist},
-    {path: '/ddash/:id/avail', component: DocAvail},
+    {path: '/:name/:id/avail', component: DocAvail},
     {path: '/:name/appts/update', component: UpdateHistory},
     {path: '/pdash', component: PatientDash},
     {path: '/ddash/:id', component: DoctorDash},

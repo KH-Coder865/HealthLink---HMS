@@ -26,9 +26,17 @@ patient_fields = {
 class PatientResource(Resource):
     @auth_required('token')
     @roles_accepted('patient', 'admin','doctor')
-    def get(self, id):
-        patient = PatientService.get_by_id(id)
-        return marshal(patient, patient_fields), 200
+    def get(self):
+        uid= request.args.get("uid", type=int)
+        id= request.args.get("id",type=int)
+
+        if id:
+            pat = PatientService.get_by_id(id=id)
+            return marshal(pat, patient_fields), 200
+        
+        if uid:
+            pat = PatientService.get_by_id(uid=uid)
+            return marshal(pat, patient_fields), 200
 
     @auth_required('token')
     @roles_accepted('patient', 'admin')

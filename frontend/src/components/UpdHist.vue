@@ -172,7 +172,7 @@ export default {
         this.loading = true;
 
         this.doc = await docStore.getbyId({ id: this.did, uid: null });
-        this.pat = await patStore.getbyId(this.pid);
+        this.pat = await patStore.getbyId({id: this.pid, uid: null});
 
         // fetch the appointment to update (status = scheduled)
         this.appt = await apptStore.getById(this.$route.query.aid);

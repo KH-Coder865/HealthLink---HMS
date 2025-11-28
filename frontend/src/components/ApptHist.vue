@@ -9,8 +9,8 @@
 
             <div class="mb-3 p-2 rounded-2 bg-light">
                 <p><strong>Patient Name:</strong> {{ pat?.details?.name }}</p>
-                <p><strong>Doctor's Name:</strong> {{ doc?.details?.name }}</p>
-                <p><strong>Department:</strong> {{ doc?.specializations?.name }}</p>
+                <p v-if="!$route.path.includes('pdash')"><strong>Doctor's Name:</strong> {{ doc?.details?.name }}</p>
+                <p v-if="!$route.path.includes('pdash')"><strong>Department:</strong> {{ doc?.specializations?.name }}</p>
             </div>
 
             <div class="table-responsive mt-2 tab">
@@ -18,6 +18,8 @@
                     <thead class="table-light sticky-top z-0">
                         <tr>
                             <th>Visit No.</th>
+                            <th v-if="$route.path.includes('pdash')">Doctor Name</th>
+                            <th v-if="$route.path.includes('pdash')">Department</th>
                             <th>Visit Date</th>
                             <th>Tests Done</th>
                             <th>Diagnosis</th>
@@ -39,6 +41,8 @@
                         <template v-else v-for="(v,i) in info" :key="v.id">
                             <tr>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ i + 1 }}</td>
+                                <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{v.doctor_name }}</td>
+                                <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{ v.dept}}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ formDate(v.appointment_date) }}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.tests_done }}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.diagnosis }}</td>
@@ -136,6 +140,7 @@
 import useAppointmentStore from "@/stores/appointments";
 import useDocStore from "@/stores/doctors";
 import usePatientStore from "@/stores/patients";
+import { routeLocationKey } from "vue-router";
 
 export default {
     name: "PatientHistory",
@@ -154,13 +159,21 @@ export default {
     methods: {
         async refresh() {
             const apptStore = useAppointmentStore();
-            const res = await apptStore.getAllbyIds({
-                pid: this.pid,
-                did: this.did,
-                status: 'completed',
-            });
-            this.info = res;
-            console.log(res);
+            if(this.$route.path.includes('pdash')) {
+                const res = await apptStore.getAllbyIds({
+                    pid: this.pid,
+                    status: 'completed'
+                });
+                this.info = res;
+            }
+            else {
+                const res = await apptStore.getAllbyIds({
+                    pid: this.pid,
+                    did: this.did,
+                    status: 'completed',
+                });
+                this.info = res;
+            }
         },
 
         formDate(date) {
@@ -171,14 +184,15 @@ export default {
     },
 
     async created() {
-        this.pid = this.$route.query.pid;
-        this.did = this.$route.query.did;
-
         const docStore = useDocStore();
         const patStore = usePatientStore();
+        this.pid = this.$route.query.pid;
+        if(this.$route.query.did) {
+            this.did = this.$route.query.did;
+            this.doc = await docStore.getbyId({id: this.did, uid: null});
+        }
 
-        this.doc = await docStore.getbyId({id: this.did, uid: null});
-        this.pat = await patStore.getbyId(this.pid);
+        this.pat = await patStore.getbyId({id: this.pid, uid: null});
     },
 
     async mounted() {

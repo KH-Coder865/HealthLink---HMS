@@ -20,6 +20,7 @@ credentials = {
     "active": fields.Boolean(attribute=lambda doc: doc.user.active if doc.user else False)
 }
 
+
 doctor_fields = {
     "id": fields.Integer,
     "details": fields.Nested(credentials, attribute=lambda doc: doc),
@@ -33,7 +34,7 @@ doctor_fields = {
 
 class DoctorResource(Resource):
     @auth_required('token')
-    @roles_accepted('doctor', 'admin')
+    @roles_accepted('doctor', 'admin', 'patient')
     def get(self):
         uid= request.args.get("uid", type=int)
         id= request.args.get("id",type=int)

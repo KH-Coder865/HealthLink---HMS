@@ -1,8 +1,9 @@
 <template>
     <UserEditForm
-    title="Edit Patient"
+    title="Edit Doctor"
     :showEmrgency="false"
     :showAge="false"
+    :showSpecialization="true"
     :showGender="false"
     :showAddress="flase"
     :load="loadDoc"
@@ -32,7 +33,7 @@ export default {
 
         async saveDoc(form) {
             return this.store.update(this.id, {
-                name: form.name,
+                name: form['name'],
                 contact_number: form.contact_number,
                 specialization: form.specialization
             });

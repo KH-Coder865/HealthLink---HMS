@@ -1,5 +1,4 @@
 from models import Specialization, db
-from sqlalchemy import func
 from services.service_errors import ServiceError
 
 class SpecializationService:

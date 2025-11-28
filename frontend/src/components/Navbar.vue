@@ -2,9 +2,9 @@
   <nav class="navbar navbar-expand-lg sticky-top shadow-sm" style="background-color:#E65100;">
     <div class="container-fluid py-2 px-4">
 
-      <a class="navbar-brand text-white fw-bold fs-4" href="#">
+      <router-link class="navbar-brand text-white fw-bold fs-4" to="/">
         Hello
-      </a>
+      </router-link>
 
       <button class="navbar-toggler bg-orange border-0" type="button" data-bs-toggle="collapse"
         data-bs-target="#navMenu">
@@ -18,19 +18,19 @@
             <router-link v-if="isAdmin" to="/adash"
               class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
 
-            <router-link v-else-if="isPatient" to="/pdash"
+            <router-link v-else-if="isPatient" :to="patDash"
               class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
-
-            <!-- Doctor dashboard link is PRE-COMPUTED -->
-            <router-link v-else :to="doctorDash"
+            
+            <router-link v-if="isPatient" :to="patHist"
+              class="nav-link nav-underline text-white fw-semibold">History</router-link>
+            
+            <router-link v-else-if="isDoctor" :to="doctorDash"
               class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
           </li>
-
-          <template v-if="userStore.isAuthenticated">
-            <li class="nav-item">
-              <router-link to="/" class="nav-link nav-underline text-white fw-semibold">Home</router-link>
-            </li>
-          </template>
+          
+          <li class="nav-item">
+            <router-link to="/" class="nav-link nav-underline text-white fw-semibold">Home</router-link>
+          </li>
 
           <template v-if="!userStore.isAuthenticated">
             <li class="nav-item">
@@ -43,6 +43,8 @@
         </ul>
 
         <div v-if="userStore.isAuthenticated" class="dropdown ms-2 ms-lg-4">
+          
+
           <button class="btn d-flex align-items-center text-white dropdown-toggle border-0" type="button"
             data-bs-toggle="dropdown">
 
@@ -50,7 +52,7 @@
             <span class="fw-semibold d-none d-sm-inline">{{ displayName }}</span>
           </button>
 
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li>
@@ -67,6 +69,7 @@
 
 <script>
 import useUserStore from '@/stores/user';
+import usePatientStore from '@/stores/patients'; 
 import useDocStore from '@/stores/doctors';
 
 export default {
@@ -76,16 +79,26 @@ export default {
     return {
       userStore: useUserStore(),
       docStore: useDocStore(),
+      patStore: usePatientStore(),
+      patDash: "/",
+      patHist: "/",
       doctorDash: "/", // resolved URL stored here
     };
   },
 
   async created() {
-    if (this.userStore.role === "doctor") {
+    if (this.isDoctor) {
       const uid = this.userStore.user.id;
       const res = await this.docStore.getbyId({ id: null, uid });
 
       this.doctorDash = `/ddash/${res.id}`;
+    }
+    else if (this.isPatient) {
+      const uid = this.userStore.user.id;
+      const res = await this.patStore.getbyId({ id: null, uid });
+
+      this.patDash = `/pdash?id=${res.id}`;
+      this.patHist = `/pdash/appts?pid=${res.id}`
     }
   },
 
@@ -97,7 +110,10 @@ export default {
       return this.userStore.isAdmin;
     },
     isPatient() {
-      return this.userStore?.user?.role === 'patient';
+      return this.isAuthenticated && this.userStore?.user?.role === 'patient';
+    },
+    isDoctor() {
+      return this.isAuthenticated && this.userStore?.user?.role === 'doctor';
     },
     displayName() {
       return this.userStore?.user?.name || this.userStore?.user?.email || "Account";

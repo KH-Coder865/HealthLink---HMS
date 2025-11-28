@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 import useUserStore from '@/stores/user';
 
 export default {
@@ -108,12 +109,17 @@ export default {
             address: "",
             loading: false,
             error: "",
+            router: "",
             userStore: null,
         };
     },
 
     created() {
         this.userStore = useUserStore();
+        this.router = useRouter();
+        const tok = localStorage.getItem("token");
+        if(tok)
+            this.router.replace('/');
     },
 
     methods: {

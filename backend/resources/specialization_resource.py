@@ -3,10 +3,21 @@ from flask_restful import Resource, marshal, fields
 from services import SpecializationService
 from flask_security import auth_required, roles_accepted
 
+
+doctor_fields = {
+    "id": fields.Integer,
+    "details": {
+        "name": fields.String(attribute="user.name")
+    },
+    "contact": fields.String(attribute="contact_number"),
+    "availability": fields.Raw
+}
+
 specialization_fields = {
     "id": fields.Integer,
     "name": fields.String,
     "description": fields.String,
+    "doctors": fields.List(fields.Nested(doctor_fields)),
 }
 
 class SpecializationResource(Resource):
@@ -50,7 +61,7 @@ class SpecializationResource(Resource):
 
 class SpecializationListResource(Resource):
     @auth_required('token')
-    @roles_accepted('admin')
+    @roles_accepted('admin','patient')
     def get(self):
         specs = SpecializationService.get_all()
         return marshal(specs, specialization_fields), 200

@@ -41,12 +41,13 @@
 
 
           <button type="submit" class="btn btn-orng btn-lg fw-bold w-100" :disabled="loading">
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2"
-              role="status"></span>{{ loading ? "Creating.." : "Create Doctor" }}
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>{{ loading ?
+              "Creating.." : "Create Doctor" }}
           </button>
         </form>
 
-        <div v-if="error && error!=='Doctor Added Succesfully!'" class="alert alert-danger mt-3 w-100 text-center">{{ error }}</div>
+        <div v-if="error && error !== 'Doctor Added Succesfully!'" class="alert alert-danger mt-3 w-100 text-center">{{
+          error }}</div>
         <div v-else-if="error" class="alert alert-success mt-3 w-100 text-center">{{ error }}</div>
       </div>
     </div>
@@ -55,6 +56,7 @@
 
 <script>
 import useDocStore from "@/stores/doctors";
+import useAppointmentStore from "@/stores/appointments";
 
 export default {
   name: "DocAdd",
@@ -68,10 +70,12 @@ export default {
       loading: false,
       error: "",
       docStore: null,
+      apptStore: null,
     }
   },
   created() {
-    this.docStore = useDocStore()
+    this.docStore = useDocStore();
+    this.apptStore = useAppointmentStore();
   },
   methods: {
     async createDoc() {
@@ -92,15 +96,52 @@ export default {
         }
       }
       catch (err) {
-          this.error =
-            err.message ||              
-            err.response?.data?.message ||
-            "Error"
-        }
-        this.loading = false
+        this.error =
+          err.message ||
+          err.response?.data?.message ||
+          "Error"
       }
+      this.loading = false
+    },
+
+    async bookSlot(day, slot) {
+      try {
+        this.loading = true;
+
+        let time_from = "";
+        let time_to = "";
+
+        if (slot === "morning") {
+          time_from = "09:00";
+          time_to = "12:00";
+        } else {
+          time_from = "16:00";
+          time_to = "21:00";
+        }
+
+        const body = {
+          patient_id: this.$route.query.pid,
+          doctor_id: this.docStore.singdoc.id,
+          date: day,
+          slot: slot,
+          time_from,
+          time_to,
+          status: "scheduled"
+        };
+
+        await apptStore.create(body);
+
+        alert("Appointment booked!");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to book appointment!");
+      } finally {
+        this.loading = false;
+      }
+    }
+
   }
-  }
+}
 </script>
 
 <style scoped>

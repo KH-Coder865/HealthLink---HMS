@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, marshal, fields
 from services import AppointmentService
+from datetime import datetime
 from flask_security import auth_required, roles_accepted
 
 treatment_fields = {
@@ -13,6 +14,9 @@ treatment_fields = {
 appointment_fields = {
     "id": fields.Integer,
     "doctor_id": fields.Integer,
+    "doctor_name": fields.String(attribute="doctor.user.name"),
+    "dept": fields.String(attribute="doctor.specialization_ref.name"),
+    "patient_name": fields.String(attribute="patient.name"),
     "patient_id": fields.Integer,
     "treatment": fields.Nested(treatment_fields, default=None),
     "appointment_date": fields.String,
@@ -48,7 +52,7 @@ class AppointmentResource(Resource):
         return {"error": "Provide id or pid or did"}, 400
     
     @auth_required('token')
-    @roles_accepted('doctor', 'admin')
+    @roles_accepted('doctor', 'admin', 'patient')
     def patch(self, id):
         appt = AppointmentService.get_by_id(id)
         if not appt:
@@ -78,5 +82,7 @@ class AppointmentListResource(Resource):
     @roles_accepted('admin', 'doctor', 'patient')
     def post(self):
         data = request.get_json()
+        data['appointment_time'] = datetime.strptime(data['appointment_time'], "%H:%M").time()
+        data['appointment_date'] = datetime.strptime(data['appointment_date'], "%Y-%m-%d").date()
         appt = AppointmentService.create(data)
         return marshal(appt, appointment_fields), 201

@@ -9,7 +9,7 @@
         iconClass="bi bi-person-fill fs-4 text-success" specont="Contact No."
         @view="(p) => $router.push(`/ddash_view/appts?pid=${p.pid}&did=${id}`)" @refresh="fetchItems('patient')" />
 
-    <router-link :to="`/ddash/${id}/avail`" style="margin-left: 46vw;" class="btn btn-outline-warning fw-bold mt-5">Change Availability</router-link>
+    <router-link :to="`/ddash/${id}/avail`" style="margin-left: 46vw;" class="btn btn-warning fw-bold mt-5">Change Availability</router-link>
 
 
 
@@ -22,7 +22,6 @@
 <script>
 import { useRouter } from 'vue-router';
 import useUserStore from '@/stores/user';
-import useDocStore from '@/stores/doctors';
 import usePatientStore from '@/stores/patients';
 import useAppointmentStore from '@/stores/appointments';
 import AdminTable from '@/components/AdminTable.vue';
@@ -37,14 +36,11 @@ export default {
         return {
             router: null,
             userStore: null,
-            docStore: null,
             id: null,
             patientStore: null,
             appointmentStore: null,
             loading: false,
-            doctorSearch: '',
             patientSearch: '',
-            filteredDoctors: [],
             filteredPatients: [],
         };
     },
@@ -52,7 +48,6 @@ export default {
     created() {
         this.router = useRouter();
         this.userStore = useUserStore();
-        this.docStore = useDocStore();
         this.id = this.$route.params.id;
         this.patientStore = usePatientStore();
         this.appointmentStore = useAppointmentStore();
@@ -63,14 +58,12 @@ export default {
             this.router.replace('/');
             return;
         }
-        this.fetchItems("doctor");
         this.fetchItems("patient");
         this.fetchItems("appointment");
     },
 
     methods: {
         getStore(type) {
-            if (type === "doctor") return this.docStore;
             if (type === "patient") return this.patientStore;
             return this.appointmentStore;
         },
@@ -92,19 +85,8 @@ export default {
             this.loading = true;
             try {
                 await store.getAll();
-                // Removed the setting of filteredPatients/Doctors based on type here.
-                // The table components (like AdminTable) should handle their own filtering
-                // or use the store's state directly as the AppointmentsTable does now.
             } catch (_) { }
             finally { this.loading = false; }
-        },
-
-        filterDoctors() {
-            const search = this.doctorSearch.toLowerCase();
-            this.filteredDoctors = this.docStore.doctors.filter(d =>
-                d.details.name.toLowerCase().includes(search) ||
-                d.specializations?.name?.toLowerCase().includes(search)
-            );
         },
 
         filterPatients() {
@@ -118,7 +100,6 @@ export default {
 
         async refreshAll() {
             await Promise.all([
-                this.docStore.getAll(),
                 this.patientStore.getAll(),
                 this.appointmentStore.getAll(),
             ])

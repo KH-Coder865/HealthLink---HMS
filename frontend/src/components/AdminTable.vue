@@ -6,7 +6,8 @@
             <div
                 class="card-header p-2 rounded-2 mb-1 fw-bold d-flex fs-header justify-content-between align-items-center">
                 <span><i :class="headcon"></i>{{ title }}</span>
-                <button class="btn btn-success btn-sm" v-if="emptyLabel == 'doctors'" @click="$emit('create')">
+                <i v-if="!$route.path.includes('adash')" class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
+                <button class="btn btn-success btn-sm" v-if="$route.path.includes('adash')" @click="$emit('create')">
                     <i class="fs-6 bi bi-person-plus"></i> Create
                 </button>
             </div>
@@ -25,7 +26,8 @@
                 <table class="table table-hover align-middle text-center mb-0">
                     <thead class="table-light sticky-top z-0">
                         <tr>
-                            <th>ID</th>
+                            <th v-if="$route.path.includes('pdash')">S. No.</th>
+                            <th v-else>ID</th>
                             <th>{{ nameColumn }}</th>
                             <th>{{ specont }}</th>
                             <th>Actions</th>
@@ -35,7 +37,7 @@
                     <tbody>
 
                         <!-- If empty -->
-                        <tr v-if="!items.length && !loading">
+                        <tr v-if="(!items)||(!items.length && !loading)">
                             <td colspan="4" class="text-muted p-4">
                                 No {{ emptyLabel }} found.
                                 <button @click="$emit('refresh')" class="btn btn-sm btn-outline-primary">
@@ -54,9 +56,12 @@
                         </tr>
 
                         <!-- List rows -->
-                        <tr v-else v-for="item in items" :key="item.id">
+                        <tr v-else v-for="(item,i) in items" :key="item.id">
                             <td>
-                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                <div v-if="$route.path.includes('pdash')" class="d-flex justify-content-center align-items-center gap-2">
+                                    {{ i + 1 }}
+                                </div>
+                                <div v-else class="d-flex justify-content-center align-items-center gap-2">
                                     {{ item.id }}
                                 </div>
                             </td>
@@ -68,7 +73,7 @@
                             </td>
 
                             <td>
-                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                <div v-if="!$route.path.includes('pdash')" class="d-flex justify-content-center align-items-center gap-2">
                                     <div v-if="specont === 'Specialization'">
                                         {{ item.specializations?.name || item.specializations?.[0]?.name || '-' }}
                                     </div>
@@ -81,22 +86,25 @@
                             <td>
                                 <div class="d-flex justify-content-center gap-2 action-buttons">
 
-                                    <button v-if="!$route.path.includes('ddash')" class="btn btn-warning btn-sm" @click="$emit('edit', item.id)">
+                                    <button v-if="$route.path.includes('adash')" class="btn btn-warning btn-sm" @click="$emit('edit', item.id)">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
 
-                                    <button v-if="!$route.path.includes('ddash')" class="btn btn-danger btn-sm" @click="$emit('delete', item.id)">
+                                    <button v-if="$route.path.includes('adash')" class="btn btn-danger btn-sm" @click="$emit('delete', item.id)">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
 
                                     <button
-                                        v-if="!$route.path.includes('ddash')"
+                                        v-if="$route.path.includes('adash')"
                                         :class="item.details.active ? 'btn btn-outline-dark btn-sm' : 'btn btn-success btn-sm'"
                                         @click="$emit('toggle', item)">
                                         <i
                                             :class="item.details.active ? 'bi bi-person-fill-slash' : 'bi bi-person-check'"></i>
                                         {{ item.details.active ? 'Blacklist' : 'Un-Blacklist' }}
                                     </button>
+
+                                    <button v-if="$route.path.includes('pdash')" class="btn text-wrap fw-bold btn-outline-secondary" @click="$emit('check', {did: item.id})"><i class="bi bi bi-clock-fill me-2"></i>Check Availability</button>
+                                    <button v-if="$route.path.includes('pdash')" class="btn text-wrap fw-bold btn-outline-primary" @click="$emit('view', {did: item.id})"><i class="bi bi-file-earmark-person-fill me-2"></i>View Profile</button>
 
                                     <button class="btn btn-success fw-bold" v-if="$route.path.includes('ddash')" @click="$emit('view', {pid: item.id})"><i class="bi bi-eye me-2"></i>View</button>
 
