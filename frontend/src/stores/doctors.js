@@ -81,7 +81,7 @@ const useDocStore = defineStore("doctor", {
             }
 
             await this.getAll();
-            this.singdoc = refreshed;
+            this.singdoc = await this.getbyId({id});
         },
 
 

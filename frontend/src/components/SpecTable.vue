@@ -1,9 +1,9 @@
 <template>
-    <div style="margin-left: 18%;" class="mdev mt-4">
-        <div class="entity-card">
+    <div class="mdev d-flex flex-column align-items-center mt-4">
+        <div class="entity-card ms-0">
 
             <div
-                class="card-header mb-4 p-2 rounded-2 fw-bold d-flex fs-header justify-content-between align-items-center">
+                class="card-header mb-4 ms-0 p-2 rounded-2 fw-bold d-flex fs-header justify-content-between align-items-center">
                 <span><i class="bi bi-bank2 me-2"></i>Departments Available</span>
 
                 <i class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
@@ -71,13 +71,17 @@ export default {
 
 <style scoped>
 .entity-card {
-    max-width: 70vw;
+    max-width: 80vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .tab {
     max-height: 300px;
     overflow-x: auto;
     overflow-y: auto;
+    min-width: 80vw;
 }
 
 .card-header {
@@ -89,13 +93,9 @@ export default {
 }
 
 @media (max-width: 800px) {
-    .mdev {
-        margin-left: 3% !important;
-    }
 
     .entity-card {
         max-width: 100vw;
-        margin: 0 2rem;
     }
 
     .fs-header {
@@ -105,13 +105,34 @@ export default {
     table th,
     table td {
         padding: 0.5rem;
-        white-space: nowrap;
+    }
+
+    .card-header { 
+        width: 95vw !important;
+        text-wrap: nowrap !important;
     }
 
     .btn {
-        width: 100%;
+        width: 90px;
         max-width: 120px;
         padding: 0.5rem;
+    }
+}
+
+@media (max-width:400px) {
+    .fs-header {
+        font-size: 1.3rem;
+    }
+
+    table {
+        width: 300px;
+    }
+
+    .card-header {
+        text-wrap: wrap !important;
+    }
+    .btn {
+        width: 100px;
     }
 }
 </style>

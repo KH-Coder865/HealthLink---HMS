@@ -60,6 +60,7 @@ const useUserStore = defineStore("user", {
             }
             this.setToken(res.token);
             this.setUser(res);
+            
         },
 
         
@@ -69,8 +70,12 @@ const useUserStore = defineStore("user", {
             if (!res.token) {
                 throw new Error("Login failed: No token received");
             }
-            this.setToken(res.token);
-            this.setUser(res); // save the full user object
+            console.log(res)
+            if(res.active) {
+                this.setToken(res.token);
+                this.setUser(res); // save the full user object
+            }
+            return res;
         },
 
 

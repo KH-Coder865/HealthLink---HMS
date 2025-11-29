@@ -14,14 +14,14 @@
         </div>
     </div>
 
-    <AdminTable title="Registered Doctors" placer="Search by name or specialization" v-model:srchstring="doctorSearch"
+        <AdminTable title="Registered Doctors" placer="Search by name or specialization" v-model:srchstring="doctorSearch"
         :filtfunc="filterDoctors" emptyLabel="doctors" nameColumn="Doctor Name"
         :items="doctorSearch ? filteredDoctors : docStore.doctors" :loading="loading" headcon="bi bi-hospital me-2"
         iconClass="bi bi-person-circle fs-4 text-primary" specont="Specialization"
         @create="router.push('/adash/doctor/create')" @refresh="fetchItems('doctor')" @edit="editItem('doctor', $event)"
         @delete="deleteItem('doctor', $event)" @toggle="toggleBlacklist('doctor', $event)" />
-
-    <AdminTable title="Registered Patients" placer="Search by name, id or contact no."
+        
+        <AdminTable title="Registered Patients" placer="Search by name, id or contact no."
         headcon="bi bi-person-lines-fill me-2" emptyLabel="patients" nameColumn="Patient Name"
         v-model:srchstring="patientSearch" :filtfunc="filterPatients"
         :items="patientSearch ? filteredPatients : patientStore.patients" :loading="loading"
@@ -29,12 +29,13 @@
         @create="router.push('/adash/patient/create')" @refresh="fetchItems('patient')"
         @edit="editItem('patient', $event)" @delete="deleteItem('patient', $event)"
         @toggle="toggleBlacklist('patient', $event)" />
-
-    <AppointmentsTable @refresh="fetchItems('appointment')"
+        
+        <AppointmentsTable @refresh="fetchItems('appointment')"
         @view="router.push({ path: '/adash_view/appts', query: $event })" @cancel="cancelAppointment" />
-
-    <div v-if="loading" class="loader-overlay d-flex flex-column">
-        <div class="text-danger pulse fs-1" role="status"><i class="bi bi-heart-pulse-fill"></i></div>
+    
+        
+        <div v-if="loading" class="loader-overlay d-flex flex-column">
+            <div class="text-danger pulse fs-1" role="status"><i class="bi bi-heart-pulse-fill"></i></div>
         Loading.....
     </div>
 </template>
@@ -191,6 +192,16 @@ export default {
 </script>
 
 <style>
+.pulse {
+    animation: pulseanim 0.5s ease-out infinite;
+}
+
+@keyframes pulseanim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
+
 .loader-overlay {
     position: fixed;
     top: 0;

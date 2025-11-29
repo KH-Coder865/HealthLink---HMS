@@ -1,18 +1,18 @@
 <template>
-    <div style="margin-left: 18%;" class="mdev mt-4">
-        <div class="entity-card">
-
+    <div class="mdev mt-4">
+        
+    <div class="d-flex flex-column align-items-center">
             <!-- Header -->
             <div
-                class="card-header p-2 rounded-2 mb-1 fw-bold d-flex fs-header justify-content-between align-items-center">
+                class="card-header p-2 ms-0 rounded-2 mb-1 fw-bold m-0 d-flex fs-header justify-content-between align-items-center">
                 <span><i :class="headcon"></i>{{ title }}</span>
-                <i v-if="!$route.path.includes('adash')" class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
-                <button class="btn btn-success btn-sm" v-if="$route.path.includes('adash')" @click="$emit('create')">
+                <i v-if="!$route.path.includes('adash') && !$route.path.includes('pdash')" class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
+                <button id="crt" class="btn btn-success btn-sm" v-if="$route.path.includes('adash') && emptyLabel==='doctors'" @click="$emit('create')">
                     <i class="fs-6 bi bi-person-plus"></i> Create
                 </button>
             </div>
-            <div class="input-group mb-4">
-                <span class="input-group-text">
+            <div style="max-width:80vw" class="input-group mb-4">
+                <span class="input-group-text p-sm-2 px-1 w-sm-full">
                     <i class="bi bi-search me-2"></i>
                     {{ emptyLabel.charAt(0).toUpperCase() + emptyLabel.slice(1) }}
                 </span>
@@ -24,7 +24,7 @@
             <!-- Table -->
             <div class="table-responsive mt-2 tab">
                 <table class="table table-hover align-middle text-center mb-0">
-                    <thead class="table-light sticky-top z-0">
+                    <thead class="table-light sticky-top z-999">
                         <tr>
                             <th v-if="$route.path.includes('pdash')">S. No.</th>
                             <th v-else>ID</th>
@@ -104,7 +104,7 @@
                                     </button>
 
                                     <button v-if="$route.path.includes('pdash')" class="btn text-wrap fw-bold btn-outline-secondary" @click="$emit('check', {did: item.id})"><i class="bi bi bi-clock-fill me-2"></i>Check Availability</button>
-                                    <button v-if="$route.path.includes('pdash')" class="btn text-wrap fw-bold btn-outline-primary" @click="$emit('view', {did: item.id})"><i class="bi bi-file-earmark-person-fill me-2"></i>View Profile</button>
+                                    <button v-if="$route.path.includes('pdash')" class="btn text-wrap fw-bold btn-outline-primary" @click="$emit('prof', {uid: item?.details?.id, did: item.id})"><i class="bi bi-file-earmark-person-fill me-2"></i>View Profile</button>
 
                                     <button class="btn btn-success fw-bold" v-if="$route.path.includes('ddash')" @click="$emit('view', {pid: item.id})"><i class="bi bi-eye me-2"></i>View</button>
 
@@ -116,9 +116,8 @@
 
                 </table>
             </div>
-
+</div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -152,10 +151,6 @@ export default {
 </script>
 
 <style scoped>
-.entity-card {
-    max-width: 70vw;
-}
-
 .tab {
     max-height: 300px;
 }
@@ -173,21 +168,55 @@ export default {
 }
 
 @media (max-width: 800px) {
-    .mdev {
-        margin-left: 3% !important;
-    }
-
-    .ms-4 {
-        margin-left: 0 !important;
-    }
-
-    .entity-card {
-        max-width: 100vw;
-        margin: 0 2rem;
-    }
+    
 
     .fs-header {
         font-size: 1.5rem;
+    }
+
+    table {
+        width: 60vw;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+    .card-header {
+        width: 100vw !important;
+    }
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+
+    .btn {
+        width: 100%;
+        max-width: 120px;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    
+
+    .fs-header {
+        font-size: 1.3rem;
+        text-wrap: nowrap;
+    }
+
+    .tab {
+        max-width: 300px;
+    } 
+
+    table th:first-child,
+    table td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: rgb(241, 239, 239);
     }
 
     table th,
@@ -196,16 +225,24 @@ export default {
         white-space: nowrap;
     }
 
+    
+
     .action-buttons {
         flex-direction: column;
         gap: 0.5rem;
         align-items: center;
     }
 
-    .btn {
-        width: 100%;
-        max-width: 120px;
-        padding: 0.5rem;
+
+    #crt {
+        width: 50px !important;
+        font-size: small;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        overflow-x: hidden;
+        padding: 0;
     }
 }
 </style>

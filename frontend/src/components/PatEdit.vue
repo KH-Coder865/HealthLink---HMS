@@ -36,6 +36,9 @@ export default {
                 name: form.name,
                 contact_number: form.contact_number,
                 emergency_contact: form.emer_contact_number,
+                gender: form.gender,
+                age: form.age,
+                address: form.address,
             });
         }
     }

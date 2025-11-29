@@ -38,14 +38,13 @@ const usePatientStore = defineStore("patient", {
                 emergency_contact: data.emergency_contact,
                 contact_number: data.contact_number,
                 age: data.age,
-                gender: data.gender
+                gender: data.gender,
+                address: data.address,
             };
 
             const userData = {
                 name: data.name,
-                email: data.email,
             };
-            if (data.password) userData.password = data.password;
 
             const patres = await this.getbyId({id, uid:null});
             await api.patch(`/patients/${id}`, patientData);

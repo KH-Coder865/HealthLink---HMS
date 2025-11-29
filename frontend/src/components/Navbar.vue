@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg sticky-top shadow-sm" style="background-color:#E65100;">
+  <nav class="navbar navbar-expand-lg sticky-top shadow-sm" style="background-color:#E65100; z-index: 9999;">
     <div class="container-fluid py-2 px-4">
 
       <router-link class="navbar-brand text-white fw-bold fs-4" to="/">
@@ -20,14 +20,16 @@
 
             <router-link v-else-if="isPatient" :to="patDash"
               class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
-            
-            <router-link v-if="isPatient" :to="patHist"
-              class="nav-link nav-underline text-white fw-semibold">History</router-link>
-            
+
             <router-link v-else-if="isDoctor" :to="doctorDash"
               class="nav-link nav-underline text-white fw-semibold">Dashboard</router-link>
           </li>
-          
+
+          <li v-if="isPatient" class="nav-item">
+            <router-link :to="patHist"
+              class="nav-link nav-underline text-white fw-semibold">History</router-link>
+          </li>
+
           <li class="nav-item">
             <router-link to="/" class="nav-link nav-underline text-white fw-semibold">Home</router-link>
           </li>
@@ -43,18 +45,20 @@
         </ul>
 
         <div v-if="userStore.isAuthenticated" class="dropdown ms-2 ms-lg-4">
-          
+
 
           <button class="btn d-flex align-items-center text-white dropdown-toggle border-0" type="button"
             data-bs-toggle="dropdown">
 
-            <i class="bi bi-person-circle"></i>
-            <span class="fw-semibold d-none d-sm-inline">{{ displayName }}</span>
+            <i class="bi bi-person-circle me-2"></i>
+            <span v-if="isPatient" class="fw-semibold d-inline">{{ displayName('pat') }}</span>
+            <span v-if="isDoctor" class="fw-semibold d-inline">{{ displayName('doc') }}</span>
+            <span v-if="isAdmin" class="fw-semibold d-inline">{{ displayName('admin') }}</span>
           </button>
 
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><router-link class="dropdown-item" :to="`/user/${userStore?.user.id}/profile`">Profile</router-link>
+            </li>
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -69,7 +73,7 @@
 
 <script>
 import useUserStore from '@/stores/user';
-import usePatientStore from '@/stores/patients'; 
+import usePatientStore from '@/stores/patients';
 import useDocStore from '@/stores/doctors';
 
 export default {
@@ -102,6 +106,16 @@ export default {
     }
   },
 
+  methods: {
+    displayName(name) {
+      if(name === 'admin')
+        return this.userStore?.user?.name ;
+      else if(name === 'pat')
+        return this.patStore?.singpat?.details?.name;
+      return this.docStore?.singdoc?.details?.name;
+    },
+  },
+
   computed: {
     isAuthenticated() {
       return this.userStore.isAuthenticated;
@@ -114,9 +128,6 @@ export default {
     },
     isDoctor() {
       return this.isAuthenticated && this.userStore?.user?.role === 'doctor';
-    },
-    displayName() {
-      return this.userStore?.user?.name || this.userStore?.user?.email || "Account";
     },
   }
 };
@@ -147,7 +158,7 @@ export default {
   width: 100%;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 991px) {
   .nav-underline:hover::after {
     width: 55px;
   }

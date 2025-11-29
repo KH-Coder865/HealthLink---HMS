@@ -85,6 +85,15 @@ export default {
 </script>
 
 <style>
+.pulse {
+    animation: pulseanim 0.5s ease-out infinite;
+}
+
+@keyframes pulseanim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1); }
+}
 .loader-overlay {
     position: fixed;
     top: 0;

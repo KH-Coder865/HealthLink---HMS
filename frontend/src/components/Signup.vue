@@ -8,74 +8,77 @@
                     <p class="text-muted small">Join the platform today.</p>
                 </div>
 
-                <form class="d-flex flex-column" @submit.prevent="signup">
-                    <div class="mb-3">
-                        <label class="form-label fw-medium">Name:</label>
-                        <input v-model="name" type="text" class="form-control" placeholder="Enter Name" required>
-                    </div>
+                <form class="d-flex align-items-center flex-column" @submit.prevent="signup">
+                    <div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-medium">Email:</label>
-                        <input v-model="email" type="email" class="form-control" placeholder="Enter Email" required>
-                    </div>
-
-                    <div class="mb-3 row">
-
-                        <div class="col">
-                            <label class="form-label fw-medium">Gender:</label>
-                            <select v-model="gender" style="cursor: pointer;" class="form-select" required>
-                                <option disabled value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Name:</label>
+                            <input v-model="name" type="text" class="form-control" placeholder="Enter Name" required>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Email:</label>
+                            <input v-model="email" type="email" class="form-control" placeholder="Enter Email" required>
+                        </div>
+                        
+                        <div class="mb-3 row">
 
+                            <div class="col">
+                                <label class="form-label fw-medium">Gender:</label>
+                                <select v-model="gender" style="cursor: pointer;" class="form-select" required>
+                                    <option disabled value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                        </div>
+                        
                         <div class="col">
                             <label class="form-label fw-medium">Age:</label>
                             <input v-model="age" type="number" min="1" class="form-control" placeholder="Enter Age"
-                                required>
+                            required>
                         </div>
 
                     </div>
-
+                    
                     <div class="mb-3">
                         <label class="form-label fw-medium">Contact Number:</label>
                         <input v-model="contact" type="text" class="form-control" placeholder="Enter Contact Number"
-                            required>
+                        required>
                     </div>
-
+                    
                     <div class="mb-3">
                         <label class="form-label fw-medium">Address:</label>
                         <input v-model="address" type="text" class="form-control" placeholder="Enter Address"
-                            required>
+                        required>
                     </div>
-
+                    
                     <div class="mb-3">
                         <label class="form-label fw-medium">Emergency Contact:</label>
                         <input v-model="emergency" type="text" class="form-control"
-                            placeholder="Enter Emergency Contact">
+                        placeholder="Enter Emergency Contact">
                     </div>
-
+                    
                     <div class="mb-3">
                         <label class="form-label fw-medium">Password:</label>
                         <input v-model="password" type="password" class="form-control" placeholder="Enter Password"
-                            required>
+                        required>
                     </div>
-
+                    
                     <div class="mb-4">
                         <label class="form-label fw-medium">Confirm:</label>
                         <input v-model="confirm" type="password" class="form-control" placeholder="Confirm Password"
-                            required>
+                        required>
                     </div>
-
+                </div>
+                    
                     <button type="submit" class="btn btn-orng btn-lg fw-bold w-100" :disabled="loading">
                         <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status"
                             aria-hidden="true"></span>{{ loading ? "Signing Up.." : "Register" }}</button>
                 </form>
 
                 <div class="text-center mt-4">
-                    <router-link to="/login" class="txt-orng small fw-medium text-decoration-none">
+                    <router-link to="/login" class="txt-orng small fw-medium">
                         Already have an account? Login
                     </router-link>
                 </div>
@@ -193,6 +196,7 @@ export default {
 .btn-orng {
     background-color: #ff8000;
     border-color: #ff8000;
+    min-width: 60%;
     color: white;
 }
 

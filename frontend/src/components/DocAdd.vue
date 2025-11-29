@@ -1,42 +1,46 @@
 <template>
-  <div class="position-absolute top-10 start-0 m-3">
-    <i class="btn btn-light shadow-smbi bi-arrow-left-circle fs-1" @click="$router.back()"></i>
-  </div>
-  <div class="d-flex justify-content-center align-items-center min-h-100 bg-light p-3 p-sm-5">
+    <div class="d-flex justify-content-center align-items-center min-h-100 bg-light p-3 p-sm-5">
     <div class="card shadow-lg px-4 py-1 p-md-1 border-0 login-card">
       <div class="card-body">
+        <div style="z-index: 999; top: 5px; left: 5px;" class="position-absolute">
+                    <i class="btn btn-outline-primary shadow-smbi bi-arrow-left-circle fs-6"
+                        @click="$router.back()">Back</i>
+                </div>
         <div class="text-center mb-4">
           <div class="fs-1 pulse mb-2 txt-orng">🩺</div>
           <h3 class="h4 text-dark fw-bold">Your Reliable Hospital Management Platform</h3>
           <p class="text-muted small">Add a Doctor to the Database</p>
         </div>
 
-        <form class="d-flex flex-column" @submit.prevent="createDoc">
-          <div class="mb-3">
-            <label for="name" class="form-label fw-medium">Full Name:</label>
-            <input v-model="name" type="text" class="form-control" id="name" placeholder="Doctor's Name" required>
-          </div>
+        <form class="d-flex align-items-center flex-column" @submit.prevent="createDoc">
+          <div>
 
-          <div class="mb-3">
-            <label for="cno" class="form-label fw-medium">Contact No. of Doctor:</label>
-            <input v-model="cno" type="tel" class="form-control" id="cno" placeholder="+12 3456789012" required>
-          </div>
-
-          <div class="mb-4">
-            <label for="spz" class="form-label fw-medium">Specialization:</label>
-            <input v-model="spz" type="text" class="form-control" id="spz" placeholder="Orthopedics, Cardio, etc."
+            <div class="mb-3">
+              <label for="name" class="form-label fw-medium">Full Name:</label>
+              <input v-model="name" type="text" class="form-control" id="name" placeholder="Doctor's Name" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="cno" class="form-label fw-medium">Contact No. of Doctor:</label>
+              <input v-model="cno" type="tel" class="form-control" id="cno" placeholder="+12 3456789012" required>
+            </div>
+            
+            <div class="mb-4">
+              <label for="spz" class="form-label fw-medium">Specialization:</label>
+              <input v-model="spz" type="text" class="form-control" id="spz" placeholder="Orthopedics, Cardio, etc."
               required>
-          </div>
-
-          <div class="mb-3">
-            <label for="email" class="form-label fw-medium">Email-Id:</label>
-            <input v-model="email" type="email" class="form-control" id="email" placeholder="you@example.com" required>
-          </div>
-
-          <div class="mb-4">
-            <label for="pass" class="form-label fw-medium">Password:</label>
-            <input v-model="password" type="password" class="form-control" id="pass" placeholder="Enter Password"
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label fw-medium">Email-Id:</label>
+              <input v-model="email" type="email" class="form-control" id="email" placeholder="you@example.com" required>
+            </div>
+            
+            <div class="mb-4">
+              <label for="pass" class="form-label fw-medium">Password:</label>
+              <input v-model="password" type="password" class="form-control" id="pass" placeholder="Enter Password"
               required>
+            </div>
           </div>
 
 
@@ -52,6 +56,11 @@
       </div>
     </div>
   </div>
+
+  <div v-if="loading" class="loader-overlay d-flex flex-column">
+        <div class="text-danger pulse fs-1" role="status"><i class="bi bi-heart-pulse-fill"></i></div>
+        Loading.....
+    </div>
 </template>
 
 <script>
@@ -104,42 +113,6 @@ export default {
       this.loading = false
     },
 
-    async bookSlot(day, slot) {
-      try {
-        this.loading = true;
-
-        let time_from = "";
-        let time_to = "";
-
-        if (slot === "morning") {
-          time_from = "09:00";
-          time_to = "12:00";
-        } else {
-          time_from = "16:00";
-          time_to = "21:00";
-        }
-
-        const body = {
-          patient_id: this.$route.query.pid,
-          doctor_id: this.docStore.singdoc.id,
-          date: day,
-          slot: slot,
-          time_from,
-          time_to,
-          status: "scheduled"
-        };
-
-        await apptStore.create(body);
-
-        alert("Appointment booked!");
-      } catch (err) {
-        console.error(err);
-        alert("Failed to book appointment!");
-      } finally {
-        this.loading = false;
-      }
-    }
-
   }
 }
 </script>
@@ -165,6 +138,20 @@ export default {
   100% {
     transform: scale(1)
   }
+}
+
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(1px);
 }
 
 .btn-orng {

@@ -7,17 +7,17 @@
                 <i class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
             </div>
 
-            <div class="mb-3 p-2 rounded-2 bg-light">
+            <div class="mb-3 w-sm-full w-75 p-2 rounded-2 bg-light">
                 <p><strong>Patient Name:</strong> {{ pat?.details?.name }}</p>
                 <p v-if="!$route.path.includes('pdash')"><strong>Doctor's Name:</strong> {{ doc?.details?.name }}</p>
                 <p v-if="!$route.path.includes('pdash')"><strong>Department:</strong> {{ doc?.specializations?.name }}</p>
             </div>
 
             <div class="table-responsive mt-2 tab">
-                <table class="table table-bordered align-middle text-center mb-0">
-                    <thead class="table-light sticky-top z-0">
+                <table class="table table-bordered align-middle tsm text-center mb-0">
+                    <thead class="table-light sticky-top z-999">
                         <tr>
-                            <th>Visit No.</th>
+                            <th id="iam">Visit No.</th>
                             <th v-if="$route.path.includes('pdash')">Doctor Name</th>
                             <th v-if="$route.path.includes('pdash')">Department</th>
                             <th>Visit Date</th>
@@ -40,7 +40,7 @@
                         </tr>
                         <template v-else v-for="(v,i) in info" :key="v.id">
                             <tr>
-                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ i + 1 }}</td>
+                                <td id="iam" :rowspan="v?.treatment?.prescription?.length || 1">{{ i + 1 }}</td>
                                 <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{v.doctor_name }}</td>
                                 <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{ v.dept}}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ formDate(v.appointment_date) }}</td>
@@ -106,6 +106,8 @@
 }
 .card-header {
     background-color: rgb(251, 176, 122);
+    min-width: 80vw !important;
+    margin-left: -1px;
 }
 
 @media (max-width: 1200px) {
@@ -127,9 +129,51 @@
         padding: 0.5rem;
         white-space: nowrap;
     }
+
+    table #iam{
+        position:sticky;
+        left: 0;
+        background-color: rgb(249, 248, 248);
+    }
+
     .btn {
         width: 100%;
         max-width: 120px;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    
+
+    .fs-header {
+        font-size: 1.3rem;
+        text-wrap: nowrap;
+    }
+    .card-header {
+        width: 90vw;
+    }
+    .tab {
+        max-width: 300px;
+    } 
+
+    table th,
+    table td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+
+    
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+
+    .btn {
+        width: 90px !important;
         padding: 0.5rem;
     }
 }
@@ -140,7 +184,6 @@
 import useAppointmentStore from "@/stores/appointments";
 import useDocStore from "@/stores/doctors";
 import usePatientStore from "@/stores/patients";
-import { routeLocationKey } from "vue-router";
 
 export default {
     name: "PatientHistory",

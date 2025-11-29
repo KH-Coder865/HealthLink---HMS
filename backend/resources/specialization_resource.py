@@ -7,7 +7,8 @@ from flask_security import auth_required, roles_accepted
 doctor_fields = {
     "id": fields.Integer,
     "details": {
-        "name": fields.String(attribute="user.name")
+        "name": fields.String(attribute="user.name"),
+        "id":fields.Integer(attribute="user.id")
     },
     "contact": fields.String(attribute="contact_number"),
     "availability": fields.Raw

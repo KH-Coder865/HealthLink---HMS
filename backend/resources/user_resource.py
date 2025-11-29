@@ -1,7 +1,7 @@
-from flask import request, jsonify
+from flask import request
 from flask_restful import Resource, marshal, fields
 from services import UserService
-from flask_security import auth_required, roles_required
+from flask_security import auth_required, roles_required, roles_accepted
 
 doctor_fields = {
     "id": fields.Integer,
@@ -57,7 +57,7 @@ class UserResource(Resource):
         return marshal(user, user_fields), 200
     
     @auth_required('token')
-    @roles_required('admin')
+    @roles_accepted('admin','patient')
     def patch(self,id):
         user=UserService.get_by_id(id)
         if not user:

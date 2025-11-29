@@ -13,6 +13,7 @@ import Profile from '@/components/Profile.vue'
 import UpdateHistory from '@/components/UpdHist.vue' 
 import DocAvail from '@/components/DocAvail.vue'
 import DocbySpec from '@/components/DocbySpec.vue'
+import Blacklisted from '@/components/Blacklisted.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,7 +24,7 @@ const router = createRouter({
     {path: '/adash', component: AdminDash},
     {path: '/adash/doctor/create', component: DocAdd},
     {path: '/adash/doctor/:id/edit', component: DocEdit},
-    {path: '/adash/patient/:id/edit', component: PatEdit},
+    {path: '/:name/patient/:id/edit', component: PatEdit},
     {path: '/user/:id/profile', component: Profile},
     {path: '/pdash/:id/docs', component: DocbySpec},
     {path: '/:name/appts', component: ApptHist},
@@ -31,6 +32,7 @@ const router = createRouter({
     {path: '/:name/appts/update', component: UpdateHistory},
     {path: '/pdash', component: PatientDash},
     {path: '/ddash/:id', component: DoctorDash},
+    {path: '/blacklisted', component: Blacklisted}
 
   ],
 })

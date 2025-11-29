@@ -46,7 +46,6 @@ const useAppointmentStore = defineStore("appointments", {
                     throw new Error("PID or DID not found!")
                 if (status)
                     finres = res.filter(a => a.status === status);
-                console.log("store=", finres[0].doctor_name)
                 return finres ? finres : res;
             } catch (err) {
                 console.error("Failed to fetch history:", err);

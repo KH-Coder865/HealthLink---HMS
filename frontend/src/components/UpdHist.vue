@@ -1,14 +1,14 @@
 <template>
     <div class="ms-4 d-flex justify-content-center overflow-hidden mt-4">
         <div class="entity-card">
-            <div class="card-header p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
+            <div
+                class="card-header rounded-2 p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
                 <span><i class="bi bi-arrow-repeat me-2"></i>Update History</span>
 
-                <i class="btn btn-outline-primary bi-arrow-left-circle fs-6" @click="$router.back()">&nbsp;Back</i>
+                <i class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
             </div>
 
-            <!-- Patient + Doctor Info -->
-            <div class="mb-3 p-2 rounded-2 bg-light">
+            <div class="mb-3  w-sm-full w-75 p-2 rounded-2 bg-light">
                 <p><strong>Patient Name:</strong> {{ pat?.details?.name }}</p>
                 <p><strong>Doctor's Name:</strong> {{ doc?.details?.name }}</p>
                 <p><strong>Department:</strong> {{ doc?.specializations?.name }}</p>
@@ -16,7 +16,7 @@
             </div>
 
             <!-- Update Form -->
-            <div class="card p-3 mb-3">
+            <div class="card crd p-3 mb-3">
 
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -45,10 +45,10 @@
                     </thead>
                     <tbody>
                         <tr v-for="(p, idx) in form.prescription" :key="idx">
-                            <td><input v-model="p.med" class="form-control"></td>
-                            <td><input v-model="p.dose" class="form-control"></td>
-                            <td><input v-model="p.duration" class="form-control"></td>
-                            <td>
+                            <td data-label="Medicine"><input v-model="p.med" class="form-control"></td>
+                            <td data-label="Dose"><input v-model="p.dose" class="form-control"></td>
+                            <td data-label="Duration"><input v-model="p.duration" class="form-control"></td>
+                            <td data-label="Timing">
                                 <select v-model="p.timing" class="form-control hover:cursor-pointer">
                                     <option disabled value="">Select</option>
                                     <option>1-1-1</option>
@@ -71,7 +71,7 @@
                     </tbody>
                 </table>
 
-                <button class="btn btn-sm btn-outline-success mb-3" @click="addRow">
+                <button id="cnt" class="btn btn-sm btn-outline-success mb-3" @click="addRow">
                     <i class="bi bi-plus-circle"></i> Add Medicine
                 </button>
 
@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Submit -->
-                <button class="btn btn-primary fw-bold" @click="submitUpdate">
+                <button id="cnt" class="btn btn-primary fw-bold" @click="submitUpdate">
                     <i class="bi bi-check2-circle"></i> Update History
                 </button>
             </div>
@@ -172,9 +172,8 @@ export default {
         this.loading = true;
 
         this.doc = await docStore.getbyId({ id: this.did, uid: null });
-        this.pat = await patStore.getbyId({id: this.pid, uid: null});
+        this.pat = await patStore.getbyId({ id: this.pid, uid: null });
 
-        // fetch the appointment to update (status = scheduled)
         this.appt = await apptStore.getById(this.$route.query.aid);
 
         this.loading = false;
@@ -188,14 +187,11 @@ export default {
     width: 100%;
 }
 
-.tab {
-    max-height: 400px;
-    max-width: 95vw;
-    overflow-y: auto;
-}
 
 .card-header {
     background-color: rgb(251, 176, 122);
+    min-width: 80vw !important;
+    margin-left: -1px;
 }
 
 .fs-header {
@@ -231,5 +227,75 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+@media (max-width: 768px) {
+    #cnt {
+        margin-left: 40%;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+
+
+    .fs-header {
+        font-size: 1.2rem;
+        text-wrap: nowrap;
+    }
+
+    .card-header {
+        width: 90vw;
+    }
+
+    table.table,
+    table.table thead,
+    table.table tbody,
+    table.table th,
+    table.table td,
+    table.table tr {
+        display: block;
+        width: 100%;
+    }
+
+    table.table thead {
+        display: none;
+    }
+
+    table.table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    table.table td {
+        text-align: left !important;
+        padding-left: 40%;
+        position: relative;
+        border: none !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    table.table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        top: 8px;
+        font-weight: bold;
+    }
+
+    table.table td:last-child {
+        padding-left: 0;
+    }
+
+
+    .crd {
+        width: 320px;
+    }
+
+    #cnt {
+        margin-left: 35%;
+        width: 90px !important;
+        padding: 0.5rem;
+    }
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
-    <div style="margin-left: 18%;" class="mdev mt-4">
-        <div class="entity-card">
+    <div class="mdev mt-4">
+        <div class="d-flex flex-column align-items-center">
 
             <div
-                class="card-header mb-4 p-2 rounded-2 fw-bold d-flex fs-header justify-content-between align-items-center">
-                <span><i class="bi bi-file-medical me-2"></i>Upcoming Appointments</span>
-            </div>
+            class="card-header ms-0 mb-4 me-0 p-2 rounded-2 fw-bold d-flex fs-header justify-content-between align-items-center">
+            <span><i class="bi bi-file-medical me-2"></i>Upcoming Appointments</span>
+        </div>
 
-            <div class="table-responsive mt-2 tab">
-                <table class="table table-hover align-middle text-center mb-0">
-                    <thead class="table-light sticky-top z-0">
+        <div class="table-responsive mt-2 tab">
+                <table class="table tsm table-hover align-middle text-center mb-0">
+                    <thead class="table-light sticky-top z-999">
                         <tr>
                             <th>#ID</th>
                             <th v-if="!$route.path.includes('pdash')">Patient</th>
@@ -30,7 +30,7 @@
                                 </div>Loading...
                             </td>
                         </tr>
-
+                        
                         <tr v-else-if="mappedAppointments.length === 0">
                             <td colspan="6" class="text-muted p-4">
                                 No appointments found.
@@ -39,7 +39,7 @@
                                 </button>
                             </td>
                         </tr>
-
+                        
                         <tr v-for="a in mappedAppointments" :key="a.id">
                             <td>{{ a.id }}</td>
                             <td v-if="!$route.path.includes('pdash')">{{ a.patientName }}</td>
@@ -47,42 +47,42 @@
                             <td v-if="!$route.path.includes('ddash')">{{ a.department }}</td>
                             <td v-if="!$route.path.includes('adash')">{{ a.dt }}</td>
                             <td v-if="!$route.path.includes('adash')">{{ a.time }}</td>
-
+                            
                             <td v-if="!$route.path.includes('pdash')">
                                 <button
-                                    v-if="!$route.path.includes('pdash') && ((!(a.id in isComp)) || (a.id in isComp && !isComp[a.id]))"
-                                    class="btn btn-success btn-sm fw-bold"
-                                    @click="$emit('view', { pid: a.pid, did: a.did })">
-                                    <i class="bi bi-eye"></i>&nbsp;View
-                                </button>
-                                <button v-else-if="$route.path.includes('ddash') && a.id in isComp && isComp[a.id]"
-                                    class="btn btn-outline-primary me-2 btn-sm fw-bold text-wrap"
-                                    @click="$router.push(`/ddash/appts/update?pid=${a.pid}&did=${a.did}&aid=${a.id}`)">
-                                    <i class="bi-arrow-repeat"></i>&nbsp;Update History
-                                </button>
-                            </td>
-
-                            <td class="d-flex gap-1 flex-sm-wrap">
-                                <button v-if="$route.path.includes('ddash')"
-                                    class="btn btn-outline-success me-2 btn-sm fw-bold text-wrap"
-                                    @click="isComp[a.id] = true">
+                                v-if="!$route.path.includes('pdash') && ((!(a.id in isComp)) || (a.id in isComp && !isComp[a.id]))"
+                                class="btn btn-success btn-sm fw-bold"
+                                @click="$emit('view', { pid: a.pid, did: a.did })">
+                                <i class="bi bi-eye"></i>&nbsp;View
+                            </button>
+                            <button v-else-if="$route.path.includes('ddash') && a.id in isComp && isComp[a.id]"
+                            class="btn btn-outline-primary me-2 btn-sm fw-bold text-wrap"
+                            @click="$router.push(`/ddash/appts/update?pid=${a.pid}&did=${a.did}&aid=${a.id}`)">
+                            <i class="bi-arrow-repeat"></i>&nbsp;Update History
+                        </button>
+                    </td>
+                    
+                    <td class="d-flex gap-1 flex-sm-wrap">
+                        <button v-if="$route.path.includes('ddash')"
+                        class="btn btn-outline-success me-2 btn-sm fw-bold text-wrap"
+                        @click="isComp[a.id] = true">
                                     <i class="bi bi-check2-circle"></i>&nbsp;Mark as Completed
                                 </button>
-
+                                
                                 <button class="btn btn-danger btn-sm fw-bold" @click="$emit('cancel', a.id)">
                                     <i class="bi bi-x-circle"></i>&nbsp;Cancel
                                 </button>
                             </td>
-
+                            
                         </tr>
                     </tbody>
-
+                    
                 </table>
             </div>
-
         </div>
-    </div>
-</template>
+            
+        </div>
+    </template>
 
 <script>
 import useAppointmentStore from "@/stores/appointments";
@@ -201,12 +201,10 @@ export default {
 </script>
 
 <style scoped>
-.entity-card {
-    max-width: 70vw;
-}
 
 .tab {
     max-height: 300px;
+    max-width: 90vw;
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -229,6 +227,13 @@ export default {
         margin: 0 2rem;
     }
 
+    .tsm th:nth-child(2),
+    .tsm td:nth-child(2) {
+        position:sticky;
+        left: 0;
+        background-color: rgb(249, 248, 248);
+    }
+
     .fs-header {
         font-size: 1.5rem;
     }
@@ -239,9 +244,46 @@ export default {
         white-space: nowrap;
     }
 
+    .card-header { 
+        width: 95vw;
+        margin-left: -5px;
+    }
+
     .btn {
         width: 100%;
         max-width: 120px;
+        padding: 0.5rem;
+    }
+}
+@media (max-width: 400px) {
+    
+
+    .fs-header {
+        font-size: 1.3rem;
+        text-wrap: nowrap;
+    }
+
+    .tab {
+        max-width: 300px;
+    } 
+
+    table th,
+    table td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+
+    
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+
+    .btn {
+        width: 90px !important;
         padding: 0.5rem;
     }
 }
