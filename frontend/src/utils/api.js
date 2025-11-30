@@ -1,7 +1,6 @@
 import router from "@/router";
 
-const URL = "http://192.168.137.1:5000/api"
-// const URL = "http://localhost:5000/api"
+const URL = "http://localhost:5000/api"
 
 const api = {
     async request(endpoint, options = {}) {

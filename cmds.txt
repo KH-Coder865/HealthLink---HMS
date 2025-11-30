@@ -1,2 +1,14 @@
 # For initializing db
+
 python -m scripts.init_db
+
+
+
+# Redis Stop
+
+sudo systemctl stop redis
+
+
+
+# Celery start
+celery -A app:celery_app worker --loglevel=INFO

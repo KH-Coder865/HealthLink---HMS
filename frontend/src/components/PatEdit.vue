@@ -32,7 +32,7 @@ export default {
         },
 
         async savePatient(form) {
-            return this.store.update(this.id, {
+            const res= await this.store.update(this.id, {
                 name: form.name,
                 contact_number: form.contact_number,
                 emergency_contact: form.emer_contact_number,
@@ -40,6 +40,13 @@ export default {
                 age: form.age,
                 address: form.address,
             });
+
+            if(this.$route.path.includes('pdash')) {
+                this.$router.go(0)
+            }
+
+            return res;
+
         }
     }
 };

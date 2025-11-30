@@ -36,7 +36,7 @@ def make_genuine_timestamps(appointment_dt, now_dt):
     updated_at = created_at
     return created_at, updated_at
 
-app = create_app()
+app, celery_app = create_app()
 
 with app.app_context():
     print("🔄 Resetting database...")

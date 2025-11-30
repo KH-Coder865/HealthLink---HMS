@@ -86,3 +86,43 @@ class AppointmentService:
         db.session.add(apt)
         db.session.commit()
         return apt
+    
+    @staticmethod
+    def get_today_appointments():
+        from datetime import date
+        return Appointment.query.filter_by(appointment_date=date.today(), status="scheduled").all()
+
+    @staticmethod
+    def get_pat_hist(id):
+        appointments = Appointment.query.filter_by(patient_id=id, status='completed').all()
+        hist = []
+        for appt in appointments:
+            hist.append({
+                "date": str(appt.appointment_date),
+                "doctor": appt.doctor.user.name,
+                "dept": appt.doctor.specialization_ref.name,
+                "diagnosis": appt.treatment.diagnosis if appt.treatment else None,
+                "prescription": appt.treatment.prescription if appt.treatment else None,
+                "tests_done": appt.treatment.tests_done if appt.treatment else None,
+                "notes": appt.treatment.notes if appt.treatment else None,
+            })
+        print(hist)
+        return hist
+
+    @staticmethod
+    def get_monthly_summary(month):
+        appts = Appointment.query.filter(db.extract('month', Appointment.appointment_date) == month).all()
+        summary = {}
+        for appt in appts:
+            doc_id = appt.doctor_id
+            if doc_id not in summary:
+                summary[doc_id] = {
+                    "doctor_name": appt.doctor.user.name,
+                    "appointments": []
+                }
+            summary[doc_id]["appointments"].append({
+                "patient": appt.patient.user.name,
+                "date": appt.appointment_date,
+                "diagnosis": appt.treatment.diagnosis if appt.treatment else None
+            })
+        return summary

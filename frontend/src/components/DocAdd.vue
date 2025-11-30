@@ -6,6 +6,7 @@
                     <i class="btn btn-outline-primary shadow-smbi bi-arrow-left-circle fs-6"
                         @click="$router.back()">Back</i>
                 </div>
+                
         <div class="text-center mb-4">
           <div class="fs-1 pulse mb-2 txt-orng">🩺</div>
           <h3 class="h4 text-dark fw-bold">Your Reliable Hospital Management Platform</h3>

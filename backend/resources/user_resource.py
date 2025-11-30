@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, marshal, fields
 from services import UserService
+from extentions import cache
 from flask_security import auth_required, roles_required, roles_accepted
 
 doctor_fields = {
@@ -31,6 +32,7 @@ user_fields = {
 """/api/user/:id"""
 
 class UserResource(Resource):
+    @cache.memoize()
     @auth_required('token')
     @roles_required('admin')
     def get(self,id):
@@ -45,6 +47,8 @@ class UserResource(Resource):
             return {"message":"User not found"},404
         data=request.get_json()
         UserService.update(data)
+        cache.delete_memoized(self.get,id)
+        cache.delete_memoized(UserListResource.get)
         return marshal(user, user_fields), 200
     
     @auth_required('token')
@@ -54,6 +58,8 @@ class UserResource(Resource):
         if not user:
             return {"message":"User not found"},404
         UserService.delete(id)
+        cache.delete_memoized(self.get,id)
+        cache.delete_memoized(UserListResource.get)
         return marshal(user, user_fields), 200
     
     @auth_required('token')
@@ -64,10 +70,13 @@ class UserResource(Resource):
             return {"message":"User not found"},404
         data=request.get_json()
         UserService.partial_update(id,data)
+        cache.delete_memoized(self.get,id)
+        cache.delete_memoized(UserListResource.get)
         return marshal(user, user_fields), 200
 
 """/api/user -> get, post"""
 class UserListResource(Resource):
+    @cache.cached(key_prefix="users_list")
     @auth_required('token')
     @roles_required('admin')
     def get(self):
@@ -79,4 +88,5 @@ class UserListResource(Resource):
     def post(self):
         data=request.get_json()
         user=UserService.create(data)
+        cache.delete("users_list")
         return marshal(user, user_fields), 201

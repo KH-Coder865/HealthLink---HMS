@@ -1,18 +1,26 @@
 <template>
     <div class="ms-4 d-flex justify-content-center overflow-hidden mt-4">
         <div class="entity-card">
-            <div class="card-header rounded-2 p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
+            <div
+                class="card-header rounded-2 p-2 mb-4 fw-bold d-flex fs-header justify-content-between align-items-center">
                 <span><i class="bi bi-hourglass-split me-2"></i>Patient History</span>
-                
+
+                <div class="d-flex gap-1">
+
+                    <button v-if="$route.path.includes('pdash')" class="btn btn-outline-success me-2" @click="exportCsv"
+                    :disabled="exporting">
+                    <i class="bi bi-download me-1"></i> Export CSV
+                </button>
                 <i class="btn btn-outline-primary bi-arrow-left-circle fs-6 " @click="$router.back()">&nbsp;Back</i>
+            </div>
             </div>
 
             <div class="mb-3 w-sm-full w-75 p-2 rounded-2 bg-light">
                 <p><strong>Patient Name:</strong> {{ pat?.details?.name }}</p>
                 <p v-if="!$route.path.includes('pdash')"><strong>Doctor's Name:</strong> {{ doc?.details?.name }}</p>
-                <p v-if="!$route.path.includes('pdash')"><strong>Department:</strong> {{ doc?.specializations?.name }}</p>
+                <p v-if="!$route.path.includes('pdash')"><strong>Department:</strong> {{ doc?.specializations?.name }}
+                </p>
             </div>
-
             <div class="table-responsive mt-2 tab">
                 <table class="table table-bordered align-middle tsm text-center mb-0">
                     <thead class="table-light sticky-top z-999">
@@ -26,6 +34,7 @@
                             <th>Medicines</th>
                             <th>Doses</th>
                             <th>Duration</th>
+                            <th>Timing</th>
                             <th>Advice</th>
                         </tr>
                     </thead>
@@ -38,23 +47,30 @@
                                 </button>
                             </td>
                         </tr>
-                        <template v-else v-for="(v,i) in info" :key="v.id">
+                        <template v-else v-for="(v, i) in info" :key="v.id">
                             <tr>
                                 <td id="iam" :rowspan="v?.treatment?.prescription?.length || 1">{{ i + 1 }}</td>
-                                <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{v.doctor_name }}</td>
-                                <td v-if="$route.path.includes('pdash')" :rowspan="v?.treatment?.prescription?.length || 1">{{ v.dept}}</td>
-                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ formDate(v.appointment_date) }}</td>
-                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.tests_done }}</td>
-                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.diagnosis }}</td>
+                                <td v-if="$route.path.includes('pdash')"
+                                    :rowspan="v?.treatment?.prescription?.length || 1">{{ v.doctor_name }}</td>
+                                <td v-if="$route.path.includes('pdash')"
+                                    :rowspan="v?.treatment?.prescription?.length || 1">{{ v.dept }}</td>
+                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ formDate(v.appointment_date)
+                                }}</td>
+                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.tests_done }}
+                                </td>
+                                <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.diagnosis }}
+                                </td>
                                 <td>{{ v?.treatment?.prescription?.[0]?.med }}</td>
                                 <td>{{ v?.treatment?.prescription?.[0]?.dose }}</td>
                                 <td>{{ v?.treatment?.prescription?.[0]?.duration }}</td>
+                                <td>{{ v?.treatment?.prescription?.[0]?.timing }}</td>
                                 <td :rowspan="v?.treatment?.prescription?.length || 1">{{ v?.treatment?.notes }}</td>
                             </tr>
                             <tr v-for="(p, idx) in v?.treatment?.prescription?.slice(1)" :key="idx">
                                 <td>{{ p?.med }}</td>
                                 <td>{{ p?.dose }}</td>
                                 <td>{{ p?.duration }}</td>
+                                <td>{{ p?.timing }}</td>
                             </tr>
                         </template>
                     </tbody>
@@ -70,24 +86,37 @@
 
 <style scoped>
 .entity-card {
-    max-width: 1200px; /* maximum width for large screens */
-    width: 100%;        /* default full width */
+    max-width: 1200px;
+    /* maximum width for large screens */
+    width: 100%;
+    /* default full width */
 }
+
 .tab {
     max-height: 400px;
     max-width: 95vw;
     overflow-y: auto;
     overflow-x: auto;
 }
+
 .pulse {
     animation: pulseanim 0.5s ease-out infinite;
 }
 
 @keyframes pulseanim {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.5); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.5);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
+
 .loader-overlay {
     position: fixed;
     top: 0;
@@ -101,9 +130,11 @@
     z-index: 2000;
     backdrop-filter: blur(1px);
 }
+
 .fs-header {
     font-size: 2rem;
 }
+
 .card-header {
     background-color: rgb(251, 176, 122);
     min-width: 80vw !important;
@@ -112,26 +143,44 @@
 
 @media (max-width: 1200px) {
     .entity-card {
-        max-width: 90%; /* slightly narrower on medium screens */
+        max-width: 90%;
+        /* slightly narrower on medium screens */
         margin: 0 1rem;
     }
 }
+@media (max-width: 960px) {
+    table th,
+    table td {
+        padding: 0.5rem;
+        white-space: nowrap;
+    }
+
+    table #iam {
+        position: sticky;
+        left: 0;
+        background-color: rgb(249, 248, 248);
+    }
+}
+
 @media (max-width: 768px) {
     .entity-card {
         max-width: 100%;
         margin: 0 0.5rem;
     }
+
     .fs-header {
         font-size: 1.5rem;
         max-width: 95vw;
     }
-    table th, table td {
+
+    table th,
+    table td {
         padding: 0.5rem;
         white-space: nowrap;
     }
 
-    table #iam{
-        position:sticky;
+    table #iam {
+        position: sticky;
         left: 0;
         background-color: rgb(249, 248, 248);
     }
@@ -144,18 +193,20 @@
 }
 
 @media (max-width: 400px) {
-    
+
 
     .fs-header {
         font-size: 1.3rem;
         text-wrap: nowrap;
     }
+
     .card-header {
         width: 90vw;
     }
+
     .tab {
         max-width: 300px;
-    } 
+    }
 
     table th,
     table td {
@@ -163,7 +214,7 @@
         white-space: nowrap;
     }
 
-    
+
 
     .action-buttons {
         flex-direction: column;
@@ -196,13 +247,14 @@ export default {
             doc: null,
             pat: null,
             loading: false,
+            exporting: false,
         };
     },
 
     methods: {
         async refresh() {
             const apptStore = useAppointmentStore();
-            if(this.$route.path.includes('pdash')) {
+            if (this.$route.path.includes('pdash')) {
                 const res = await apptStore.getAllbyIds({
                     pid: this.pid,
                     status: 'completed'
@@ -220,28 +272,68 @@ export default {
         },
 
         formDate(date) {
-            const arr= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const d=date.split('-')
-            return `${d[2]}th ${arr[d[1]-1]}, ${d[0]}`;
-        }
+            const arr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const d = date.split('-')
+            return `${d[2]}th ${arr[d[1] - 1]}, ${d[0]}`;
+        },
+
+        async exportCsv() {
+            if (!this.pid) return;
+            this.exporting = true;
+
+            try {
+                // Start the async CSV export
+                const base = import.meta.env.VITE_HOST;
+                const startResp = await fetch(`http://localhost:5000/api/export/${this.pid}`);
+                console.log(startResp.data)
+                const startData = await startResp.json();
+                const taskId = startData.task_id;
+
+                // Poll until CSV is ready
+                let ready = false;
+                let downloadUrl = null;
+                while (!ready) {
+                    await new Promise(r => setTimeout(r, 2000)); // wait 2s
+                    const statusResp = await fetch(`http://localhost:5000/api/csv_result/${taskId}`);
+                    const statusData = await statusResp.json();
+                    ready = statusData.ready;
+                    downloadUrl = statusData.url;
+                }
+
+                // Trigger CSV download
+                if (downloadUrl) {
+                    downloadUrl = `http://localhost:5000/api/${downloadUrl}`
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = downloadUrl.split('/').pop();
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            } catch (err) {
+                console.error("CSV export failed:", err);
+            } finally {
+                this.exporting = false;
+            }
+        },
     },
 
     async created() {
         const docStore = useDocStore();
         const patStore = usePatientStore();
         this.pid = this.$route.query.pid;
-        if(this.$route.query.did) {
+        if (this.$route.query.did) {
             this.did = this.$route.query.did;
-            this.doc = await docStore.getbyId({id: this.did, uid: null});
+            this.doc = await docStore.getbyId({ id: this.did, uid: null });
         }
 
-        this.pat = await patStore.getbyId({id: this.pid, uid: null});
+        this.pat = await patStore.getbyId({ id: this.pid, uid: null });
     },
 
     async mounted() {
-        this.loading=true
+        this.loading = true
         await this.refresh();
-        this.loading=false
+        this.loading = false
     },
 };
 </script>

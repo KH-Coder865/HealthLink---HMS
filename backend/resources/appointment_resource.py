@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, marshal, fields
 from services import AppointmentService
 from datetime import datetime
+from extentions import cache
 from flask_security import auth_required, roles_accepted
 
 treatment_fields = {
@@ -27,6 +28,7 @@ appointment_fields = {
 
 class AppointmentResource(Resource):
     @auth_required('token')
+    @cache.memoize()
     @roles_accepted('doctor', 'admin','patient')
     def get(self):
         appt_id = request.args.get("id", type=int)
