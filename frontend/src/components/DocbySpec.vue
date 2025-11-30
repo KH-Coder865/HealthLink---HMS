@@ -7,7 +7,7 @@
             @click="$router.back()">&nbsp;Back</i>
         </div>
         <div style="color: #fd7e14; width: 80vw;" class="fw-bolder">
-            <span class="fs-1 text-danger"><i class="bi bi-quote me-2"></i></span>{{ this.spec.description }}
+            <span class="fs-1 text-danger"><i class="bi bi-quote me-2"></i></span>{{ this.spec?.description }}
         </div>
     </div>
         

@@ -108,21 +108,3 @@ class AppointmentService:
             })
         print(hist)
         return hist
-
-    @staticmethod
-    def get_monthly_summary(month):
-        appts = Appointment.query.filter(db.extract('month', Appointment.appointment_date) == month).all()
-        summary = {}
-        for appt in appts:
-            doc_id = appt.doctor_id
-            if doc_id not in summary:
-                summary[doc_id] = {
-                    "doctor_name": appt.doctor.user.name,
-                    "appointments": []
-                }
-            summary[doc_id]["appointments"].append({
-                "patient": appt.patient.user.name,
-                "date": appt.appointment_date,
-                "diagnosis": appt.treatment.diagnosis if appt.treatment else None
-            })
-        return summary

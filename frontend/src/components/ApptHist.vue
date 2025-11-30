@@ -282,30 +282,26 @@ export default {
             this.exporting = true;
 
             try {
-                // Start the async CSV export
-                const base = import.meta.env.VITE_HOST;
-                const startResp = await fetch(`http://localhost:5000/api/export/${this.pid}`);
-                console.log(startResp.data)
-                const startData = await startResp.json();
-                const taskId = startData.task_id;
+                const res = await fetch(`http://localhost:5000/api/export/${this.pid}`);
+                const data = await res.json();
+                const tid = data.task_id;
 
-                // Poll until CSV is ready
                 let ready = false;
-                let downloadUrl = null;
+                let d_url = null;
                 while (!ready) {
                     await new Promise(r => setTimeout(r, 2000)); // wait 2s
-                    const statusResp = await fetch(`http://localhost:5000/api/csv_result/${taskId}`);
-                    const statusData = await statusResp.json();
-                    ready = statusData.ready;
-                    downloadUrl = statusData.url;
+                    const s_res = await fetch(`http://localhost:5000/api/csv_result/${tid}`);
+                    const s_data = await s_res.json();
+                    ready = s_data.ready;
+                    d_url = s_data.url;
                 }
 
                 // Trigger CSV download
-                if (downloadUrl) {
-                    downloadUrl = `http://localhost:5000/api/${downloadUrl}`
+                if (d_url) {
+                    d_url = `http://localhost:5000/api/${d_url}`
                     const link = document.createElement('a');
-                    link.href = downloadUrl;
-                    link.download = downloadUrl.split('/').pop();
+                    link.href = d_url;
+                    link.download = d_url.split('/').pop();
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

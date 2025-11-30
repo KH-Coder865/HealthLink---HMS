@@ -1,11 +1,20 @@
 from flask import Blueprint
 from flask import jsonify
-from .tasks import csv_report
+from .tasks import csv_report, monthly_report_all
 from celery.result import AsyncResult
 
-bp = Blueprint("tasks", __name__)
+bp = Blueprint("tasks", __name__, url_prefix="/api")
 
-@bp.route('/api/export/<int:patient_id>')
+@bp.route('/reports/send')
+def send_reports():
+    result = monthly_report_all.delay()
+    return jsonify({
+        "task_id": result.id,
+        "status": "started"
+    })
+
+
+@bp.route('/export/<int:patient_id>')
 def export_csv(patient_id):
     result = csv_report.delay(patient_id)
     return jsonify({
@@ -13,7 +22,9 @@ def export_csv(patient_id):
         "status": "started"
     })
 
-@bp.route('/api/csv_result/<task_id>')
+
+
+@bp.route('/csv_result/<task_id>')
 def csv_result(task_id):
     result = AsyncResult(task_id)
     return {
