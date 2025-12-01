@@ -155,6 +155,8 @@ export default {
                 }
             });
 
+            await apptStore.getAll();
+
             this.loading = false;
 
             this.$router.push(`/ddash/${this.did}`);

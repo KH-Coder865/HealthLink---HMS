@@ -25,6 +25,10 @@ export default {
         } 
     },
 
+    mounted() {
+        this.store.getAll()
+    },
+
     methods: {
         async loadDoc() {
             const doc = await this.store.getbyId({id: this.id, uid:null});

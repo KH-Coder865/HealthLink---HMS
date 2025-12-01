@@ -90,7 +90,7 @@ export default {
     };
   },
 
-  async created() {
+  async mounted() {
     if (this.isDoctor) {
       const uid = this.userStore.user.id;
       const res = await this.docStore.getbyId({ id: null, uid });
