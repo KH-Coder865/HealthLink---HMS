@@ -114,7 +114,7 @@ export default {
     },
     computed: {
         displayAvail() {
-            return this.$route.path.includes('ddash') ? this.localAvail : this.docStore.singdoc.availability;
+            return this.$route.path.includes('ddash') ? this.localAvail : this.docStore?.singdoc?.availability;
         }
     },
     async created() {

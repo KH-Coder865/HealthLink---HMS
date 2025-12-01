@@ -93,16 +93,23 @@ const useUserStore = defineStore("user", {
 
         async del(id){
             const res=await api.delete(`/users/${id}`);
+            this.getAll(); 
             return res;
         },
 
         async update(id,data){
             const res=await api.put(`/users/${id}`, data);
+            this.getAll();
+            this.singuser = res; // Update the single user state
+            console.log("Updated user:", this.singuser);
             return res;
         },
 
         async edit(id,data){
             const res=await api.patch(`/users/${id}`, data);
+            this.getAll(); // Refresh the user list after editing
+            this.singuser = res; // Update the single user state
+            console.log("Updated user:", this.singuser);
             return res;
         },
 

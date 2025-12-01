@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, marshal, fields
 from services import PatientService
 from flask_security import auth_required, roles_accepted, roles_required
+from extentions import cache
 
 credentials = {
     "id": fields.Integer(attribute=lambda pat: pat.user.id if pat.user else 0),
@@ -27,8 +28,8 @@ class PatientResource(Resource):
     @auth_required('token')
     @roles_accepted('patient', 'admin','doctor')
     def get(self):
-        uid= request.args.get("uid", type=int)
-        id= request.args.get("id",type=int)
+        uid = request.args.get("uid", type=int)
+        id = request.args.get("id", type=int)
 
         if id:
             pat = PatientService.get_by_id(id=id)
@@ -41,6 +42,8 @@ class PatientResource(Resource):
     @auth_required('token')
     @roles_accepted('patient', 'admin')
     def put(self, id):
+        cache.delete("patients_list")
+        cache.delete("appointments_list")
         patient = PatientService.get_by_id(id)
         if not patient:
             return {"message": "Patient not found"}, 404
@@ -51,6 +54,8 @@ class PatientResource(Resource):
     @auth_required('token')
     @roles_accepted('patient', 'admin')
     def patch(self, id):
+        cache.delete("patients_list")
+        cache.delete("appointments_list")
         patient = PatientService.get_by_id(id)
         if not patient:
             return {"message": "Patient not found"}, 404
@@ -61,6 +66,8 @@ class PatientResource(Resource):
     @auth_required('token')
     @roles_required('admin')
     def delete(self, id):
+        cache.delete("patients_list")
+        cache.delete("appointments_list")
         patient = PatientService.get_by_id(id)
         if not patient:
             return {"message": "Patient not found"}, 404

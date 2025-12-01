@@ -14,7 +14,10 @@ class TreatmentResource(Resource):
     @auth_required('token')
     @roles_accepted('doctor','patient','admin')
     def get(self, appointment_id):
-        treat = TreatmentService.get_by_id(appointment_id)
+        try:
+            treat = TreatmentService.get_by_id(appointment_id)
+        except Exception as e:
+            return {"message": str(e)}, 404
         return marshal(treat, treatment_fields), 200
 
     @auth_required('token')

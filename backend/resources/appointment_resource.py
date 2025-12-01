@@ -2,8 +2,8 @@ from flask import request
 from flask_restful import Resource, marshal, fields
 from services import AppointmentService
 from datetime import datetime
-from extentions import cache
 from flask_security import auth_required, roles_accepted
+from extentions import cache
 
 treatment_fields = {
     "diagnosis": fields.String,
@@ -28,7 +28,6 @@ appointment_fields = {
 
 class AppointmentResource(Resource):
     @auth_required('token')
-    @cache.memoize()
     @roles_accepted('doctor', 'admin','patient')
     def get(self):
         appt_id = request.args.get("id", type=int)
@@ -56,6 +55,7 @@ class AppointmentResource(Resource):
     @auth_required('token')
     @roles_accepted('doctor', 'admin', 'patient')
     def patch(self, id):
+        cache.delete("appointments_list")
         appt = AppointmentService.get_by_id(id)
         if not appt:
             return {"message": "Appointment not found"}, 404
@@ -66,6 +66,7 @@ class AppointmentResource(Resource):
     @auth_required('token')
     @roles_accepted('doctor', 'admin', 'patient')
     def delete(self, id):
+        cache.delete("appointments_list")
         appt = AppointmentService.get_by_id(id)
         if not appt:
             return {"message": "Appointment not found"}, 404

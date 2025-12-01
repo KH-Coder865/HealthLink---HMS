@@ -2,6 +2,7 @@ from models import Treatment, db
 from services.service_errors import ServiceError
 
 class TreatmentService:
+    
     @staticmethod
     def get_by_id(appointment_id):
         treat = Treatment.query.filter_by(appointment_id=appointment_id).first()
@@ -48,4 +49,5 @@ class TreatmentService:
         treat = Treatment(**clean_data)
         db.session.add(treat)
         db.session.commit()
+
         return treat

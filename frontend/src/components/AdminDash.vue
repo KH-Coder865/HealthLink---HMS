@@ -180,7 +180,8 @@ export default {
                 } else {
                     await api.patch(`/users/${item.details.id}`, { active: true });
                 }
-                await store.getAll();
+                await this.refreshAll();
+                
 
                 if (type === "doctor" && this.doctorSearch) this.filterDoctors();
                 if (type === "patient" && this.patientSearch) this.filterPatients();

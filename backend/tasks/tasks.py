@@ -141,7 +141,7 @@ def monthly_report_all():
             pdfkit.from_string(html, pdf_file)
 
             send_pdf_email.delay(
-                recipient_email="hariharsha153@gmail.com",
+                recipient_email=os.environ.get("recepem"),
                 subject=f"Monthly Report - {doctor.user.name}",
                 body="Dear Doctor,\n\nPlease find your monthly report attached.",
                 pdf_file_path=pdf_file

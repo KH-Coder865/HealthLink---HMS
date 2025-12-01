@@ -12,7 +12,9 @@ const useDocStore = defineStore("doctor", {
     actions: {
 
         async getAll() {
+            console.log("this.doctors", this.doctors);
             const res = await api.get("/doctors");
+            console.log(res);
             this.doctors = res;
             return res;
         },
@@ -127,6 +129,8 @@ const useDocStore = defineStore("doctor", {
         async blacklist(id) {
             const userStore = useUserStore();
 
+            console.log("Blacklisting doctor with ID:", id);
+
             const doctor = await this.getbyId({ id, uid: null });
 
             const userId = doctor.details.id;   // u_id correctly returned
@@ -135,7 +139,9 @@ const useDocStore = defineStore("doctor", {
                 active: false
             });
 
+            console.log(userStore.singuser.active);
             await this.getAll();
+            console.log(userStore.singuser.active);
 
             return { message: "Doctor blacklisted successfully" };
         },

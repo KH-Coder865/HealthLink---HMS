@@ -1,41 +1,49 @@
 from models import Patient, db
 from services.service_errors import ServiceError
+from sqlalchemy.orm import joinedload
+from extentions import cache
 
 class PatientService:
-    @staticmethod
-    def get_all():
-        return Patient.query.all()
 
     @staticmethod
+    @cache.cached(key_prefix="patients_list", timeout=300)
+    def get_all():
+        return Patient.query.options(joinedload(Patient.user)).all()
+
+    @staticmethod
+    @cache.memoize(timeout=300)
     def get_by_id(id=None, uid=None):
+        query = Patient.query.options(joinedload(Patient.user))
         if id:
-            pat = Patient.query.filter_by(id=id).first()
+            pat = query.filter_by(id=id).first()
             if not pat:
                 raise ServiceError(f"Patient with id {id} not found")
-        if uid:
-            pat = Patient.query.filter_by(u_id=uid).first()
+        elif uid:
+            pat = query.filter_by(u_id=uid).first()
             if not pat:
                 raise ServiceError(f"Patient with user id {uid} not found")
-        
+        else:
+            raise ServiceError("Either id or uid must be provided")
         return pat
 
     @staticmethod
     def create(data):
-        print("I am in create!")
         """Create a new patient profile"""
         allowed_keys = {"u_id", "age", "gender", "contact_number", "address", "emergency_contact"}
         clean_data = {k: v for k, v in data.items() if k in allowed_keys}
 
         if "u_id" not in clean_data:
-            print("service error")
             raise ServiceError("Missing required field: 'u_id'")
 
         patient = Patient(**clean_data)
-        print("before add")
         db.session.add(patient)
-        print("before commit")
         db.session.commit()
-        print("after commit")
+
+        # Invalidate caches
+        cache.delete("patients_list")
+        cache.delete_memoized(PatientService.get_by_id, patient.id)
+        cache.delete_memoized(PatientService.get_by_id, uid=patient.u_id)
+
         return patient
 
     @staticmethod
@@ -51,6 +59,12 @@ class PatientService:
                 setattr(patient, key, value)
 
         db.session.commit()
+
+        # Invalidate caches
+        cache.delete("patients_list")
+        cache.delete_memoized(PatientService.get_by_id, id)
+        cache.delete_memoized(PatientService.get_by_id, uid=patient.u_id)
+
         return patient
 
     @staticmethod
@@ -66,6 +80,12 @@ class PatientService:
                 setattr(patient, key, value)
 
         db.session.commit()
+
+        # Invalidate caches
+        cache.delete("patients_list")
+        cache.delete_memoized(PatientService.get_by_id, id)
+        cache.delete_memoized(PatientService.get_by_id, uid=patient.u_id)
+
         return patient
 
     @staticmethod
@@ -75,4 +95,10 @@ class PatientService:
             raise ServiceError(f"Patient with id {id} not found")
         db.session.delete(patient)
         db.session.commit()
+
+        # Invalidate caches
+        cache.delete("patients_list")
+        cache.delete_memoized(PatientService.get_by_id, id)
+        cache.delete_memoized(PatientService.get_by_id, uid=patient.u_id)
+
         return patient

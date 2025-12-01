@@ -1,37 +1,47 @@
 from models import Appointment, db
 from services.service_errors import ServiceError
+from sqlalchemy.orm import joinedload
+from models import Doctor, Patient
+from extentions import cache
 
 class AppointmentService:
     @staticmethod
-    def get_by_id(id=None,pid=None,did=None):
+    @cache.memoize()
+    def get_all():
+        return Appointment.query.options(
+            joinedload(Appointment.doctor).joinedload(Doctor.user),
+            joinedload(Appointment.patient).joinedload(Patient.user),
+            joinedload(Appointment.doctor).joinedload(Doctor.specialization_ref),
+            joinedload(Appointment.treatment)
+        ).all()
+
+    @staticmethod
+    @cache.memoize()
+    def get_by_id(id=None, pid=None, did=None):
+        query = Appointment.query.options(
+            joinedload(Appointment.doctor).joinedload(Doctor.user),
+            joinedload(Appointment.patient).joinedload(Patient.user),
+            joinedload(Appointment.doctor).joinedload(Doctor.specialization_ref),
+            joinedload(Appointment.treatment)
+        )
+
         if id:
-            apt = Appointment.query.filter_by(id=id).first()
+            apt = query.filter_by(id=id).first()
             if not apt:
                 raise ServiceError(f"Appointment with id {id} not found")
             return apt
-        
         if pid and did:
-            appts=[]
-            appts = Appointment.query.filter_by(patient_id=pid, doctor_id=did).all()
-            return appts
-        
+            return query.filter_by(patient_id=pid, doctor_id=did).all()
         if pid:
-            appts = Appointment.query.filter_by(patient_id=pid).all()
+            appts = query.filter_by(patient_id=pid).all()
             if not appts:
                 raise ServiceError(f"Appointment with patient id {pid} not found")
             return appts
-
         if did:
-            appts = Appointment.query.filter_by(doctor_id=did).all()
+            appts = query.filter_by(doctor_id=did).all()
             if not appts:
                 raise ServiceError(f"Appointment with doctor id {did} not found")
             return appts
-
-
-
-    @staticmethod
-    def get_all():
-        return Appointment.query.all()
 
     @staticmethod
     def delete(id):
@@ -41,9 +51,15 @@ class AppointmentService:
         db.session.delete(apt)
         db.session.commit()
 
+        # Correct cache invalidation
+        cache.delete_memoized(AppointmentService.get_by_id, id=apt.id)
+        cache.delete_memoized(AppointmentService.get_by_id, pid=apt.patient_id)
+        cache.delete_memoized(AppointmentService.get_all)
+        cache.delete_memoized(AppointmentService.get_today_appointments)
+        cache.delete_memoized(AppointmentService.get_pat_hist, apt.patient_id)
+
     @staticmethod
     def update(data):
-        """Full update of an existing appointment record."""
         apt = Appointment.query.filter_by(id=data.get("id")).first()
         if not apt:
             raise ServiceError(f"Appointment with id {data.get('id')} not found")
@@ -54,11 +70,18 @@ class AppointmentService:
                 setattr(apt, key, value)
 
         db.session.commit()
+
+        # Correct cache invalidation
+        cache.delete_memoized(AppointmentService.get_by_id, id=apt.id)
+        cache.delete_memoized(AppointmentService.get_by_id, pid=apt.patient_id)
+        cache.delete_memoized(AppointmentService.get_all)
+        cache.delete_memoized(AppointmentService.get_today_appointments)
+        cache.delete_memoized(AppointmentService.get_pat_hist, apt.patient_id)
+
         return apt
 
     @staticmethod
     def partial_update(id, data):
-        """Partial update (usually to change status or reschedule)."""
         apt = Appointment.query.filter_by(id=id).first()
         if not apt:
             raise ServiceError(f"Appointment with id {id} not found")
@@ -69,11 +92,18 @@ class AppointmentService:
                 setattr(apt, key, value)
 
         db.session.commit()
+
+        # Correct cache invalidation
+        cache.delete_memoized(AppointmentService.get_by_id, id=apt.id)
+        cache.delete_memoized(AppointmentService.get_by_id, pid=apt.patient_id)
+        cache.delete_memoized(AppointmentService.get_all)
+        cache.delete_memoized(AppointmentService.get_today_appointments)
+        cache.delete_memoized(AppointmentService.get_pat_hist, apt.patient_id)
+
         return apt
 
     @staticmethod
     def create(data):
-        """Create a new appointment."""
         allowed_keys = {"doctor_id", "patient_id", "appointment_date", "appointment_time", "status"}
         clean_data = {k: v for k, v in data.items() if k in allowed_keys}
 
@@ -85,14 +115,24 @@ class AppointmentService:
         apt = Appointment(**clean_data)
         db.session.add(apt)
         db.session.commit()
+
+        # Correct cache invalidation
+        cache.delete_memoized(AppointmentService.get_by_id, id=apt.id)
+        cache.delete_memoized(AppointmentService.get_by_id, pid=apt.patient_id)
+        cache.delete_memoized(AppointmentService.get_all)
+        cache.delete_memoized(AppointmentService.get_today_appointments)
+        cache.delete_memoized(AppointmentService.get_pat_hist, apt.patient_id)
+
         return apt
     
     @staticmethod
+    @cache.memoize()
     def get_today_appointments():
         from datetime import date
         return Appointment.query.filter_by(appointment_date=date.today(), status="scheduled").all()
 
     @staticmethod
+    @cache.memoize()
     def get_pat_hist(id):
         appointments = Appointment.query.filter_by(patient_id=id, status='completed').all()
         hist = []
@@ -106,5 +146,4 @@ class AppointmentService:
                 "tests_done": appt.treatment.tests_done if appt.treatment else None,
                 "notes": appt.treatment.notes if appt.treatment else None,
             })
-        print(hist)
         return hist

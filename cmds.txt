@@ -8,7 +8,12 @@ python -m scripts.init_db
 
 sudo systemctl stop redis
 
+# Check if a port is busy
+
+sudo lsof -i :6379
+"sudo lsof -i :<portnumber>"
+
 
 
 # Celery start
-celery -A app:celery_app worker --loglevel=INFO
+celery -A app:celery_app worker --beat --loglevel=INFO

@@ -7,27 +7,27 @@ class CeleryConfig:
     timezone = 'Asia/Kolkata'
     enable_utc = True
 
-    beat_schedule = {
-        'daily_appt_notifications': {
-            'task': 'appt_notify',
-            'schedule': crontab(hour=7, minute=0),
-        },
-        'monthly_reports_email': {
-            'task': 'monthly_report_all',
-            'schedule': crontab(hour=8, minute=0, day_of_month='1'),
-        },
-    }
-
     # beat_schedule = {
     #     'daily_appt_notifications': {
     #         'task': 'appt_notify',
-    #         'schedule': crontab(minute='*/3'),
+    #         'schedule': crontab(hour=7, minute=0),
     #     },
     #     'monthly_reports_email': {
     #         'task': 'monthly_report_all',
-    #         'schedule': crontab(minute='*/3'),
+    #         'schedule': crontab(hour=8, minute=0, day_of_month='1'),
     #     },
     # }
+
+    beat_schedule = {
+        'daily_appt_notifications': {
+            'task': 'appt_notify',
+            'schedule': crontab(minute='*/3'),
+        },
+        'monthly_reports_email': {
+            'task': 'monthly_report_all',
+            'schedule': crontab(minute='*/3'),
+        },
+    }
 
 def celery_init_app(app):
     class FlaskTask(Task):
