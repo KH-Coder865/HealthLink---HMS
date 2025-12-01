@@ -149,7 +149,7 @@ export default {
                     address: this.address,
                 });
 
-                this.$router.push("/pdash");
+                this.$router.push(`/pdash?id=${this?.userStore?.user?.id}`);
 
             } catch (e) {
                 this.error = e.message || "Signup Failed";

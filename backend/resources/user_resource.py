@@ -46,7 +46,6 @@ class UserResource(Resource):
         if not user:
             return {"message":"User not found"},404
         data=request.get_json()
-        UserService.update(data)
         cache.delete_memoized(self.get,id)
         cache.delete_memoized(UserListResource.get)
         return marshal(user, user_fields), 200

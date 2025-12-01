@@ -10,7 +10,7 @@
       >
 
         <div class="footer-brand mb-3 mb-md-0">
-          <h5 class="fw-bold mb-1">Hello</h5>
+          <h5 class="fw-bold mb-1">HealthLink HMS</h5>
           <p class="small mb-0">Crafted with care. Simple. Clean.</p>
         </div>
 
@@ -28,7 +28,7 @@
       </div>
 
       <div class="text-center small mt-3 opacity-75">
-        © {{ new Date().getFullYear() }} Hello. All rights reserved.
+        © {{ new Date().getFullYear() }} HealthLink HMS. All rights reserved.
       </div>
 
     </div>

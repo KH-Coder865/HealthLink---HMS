@@ -3,7 +3,7 @@
     <div class="container-fluid py-2 px-4">
 
       <router-link class="navbar-brand text-white fw-bold fs-4" to="/">
-        Hello
+        HealthLink HMS
       </router-link>
 
       <button class="navbar-toggler bg-orange border-0" type="button" data-bs-toggle="collapse"

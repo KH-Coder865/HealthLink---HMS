@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import jsonify
-from .tasks import csv_report, monthly_report_all
+from .tasks import csv_report, monthly_report_all, appt_notify
 from celery.result import AsyncResult
 
 bp = Blueprint("tasks", __name__, url_prefix="/api")
@@ -8,6 +8,14 @@ bp = Blueprint("tasks", __name__, url_prefix="/api")
 @bp.route('/reports/send')
 def send_reports():
     result = monthly_report_all.delay()
+    return jsonify({
+        "task_id": result.id,
+        "status": "started"
+    })
+
+@bp.route('/appts/notify')
+def notify_appointments():
+    result = appt_notify.delay()
     return jsonify({
         "task_id": result.id,
         "status": "started"

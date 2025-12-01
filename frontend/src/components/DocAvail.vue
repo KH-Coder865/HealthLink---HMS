@@ -136,7 +136,7 @@ export default {
         }
 
         if(this.$route.path.includes('ddash')){
-            setInterval(()=>{ this.setToday() }, 60*1000);
+            setInterval(()=>{ this.setToday() }, 15*1000);
         }
 
         this.loading = false;
