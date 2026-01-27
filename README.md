@@ -56,7 +56,7 @@ To run this project, you’ll need to have *Python 3.7+* installed on your syste
   
 #### 2. **Clone the repository**
 ```bash
-  -git clone https://github.com/24f3000211/hospital_management_24f3000211.git
+  -git clone https://github.com/KH-Coder865/HealthLink---HMS.git
 ```
 #### 3. **Set Up a Virtual Environment**
 
@@ -126,6 +126,6 @@ The app should now be running.
 ## 👤 Author
 
 **Kaushik Harsha** 
-- GitHub: [@24f3000211](https://github.com/24f3000211)
+- GitHub: [@KH-Coder865](https://github.com/KH-Coder865)
 
 ---
