@@ -4,7 +4,7 @@ This is a project that will help in swift and efficient management of Hospital D
 
 ---
 
-## 🔧 Assignment-Aligned Features
+## Assignment-Aligned Features
 
 This project demonstrates a **secure, scalable REST API** with authentication, role-based access control, and a minimal frontend UI to interact with backend APIs, aligned with the Backend Developer Intern assignment.
 
