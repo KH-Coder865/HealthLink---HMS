@@ -2,19 +2,89 @@
 
 This is a project that will help in swift and efficient management of Hospital Data - Doctor and Patient Appointment System and many other features.
 
-##  Features
-- **Role-based login for Admin, Doctor, and Patient.**
-- **Admin dashboard displaying total doctors, patients, and appointments.**
-- **Doctor dashboard showing upcoming appointments and patient lists.**
-- **Patient dashboard showing available doctors, booking interface, and history.**
-- **Doctor availability management for 7 days.**
-- **Appointment booking, cancellation, and rescheduling logic.**
-- **Treatment recording with diagnosis, notes, and prescriptions.**
-- **Redis caching of common queries for speed optimization.**
-- **Celery-based scheduled reminders and monthly reports.**
-- **CSV export background job for patient treatment history.**
+---
 
+## 🔧 Assignment-Aligned Features
 
+This project demonstrates a **secure, scalable REST API** with authentication, role-based access control, and a minimal frontend UI to interact with backend APIs, aligned with the Backend Developer Intern assignment.
+
+---
+
+### Backend 
+
+#### Authentication & Authorization
+- User registration and login APIs with **secure password hashing**
+- **JWT-based authentication** for protected routes
+- **Role-Based Access Control (RBAC)** implemented using:
+  - `admin`
+  - `doctor`
+  - `patient`  
+  (maps directly to *admin vs user* role requirement)
+
+#### REST API Design
+- Versioned REST APIs using `/api/v1/*`
+- Proper HTTP status codes and centralized error handling
+- Input validation and request sanitization
+- Modular, scalable project structure for future feature expansion
+
+#### CRUD Operations 
+- **Appointment** entity with full CRUD support:
+  - Create appointment
+  - Retrieve appointment(s)
+  - Update (reschedule) appointment
+  - Delete (cancel) appointment
+- **Treatment records** as an additional managed resource:
+  - Diagnosis
+  - Notes
+  - Prescriptions
+
+#### Database & Schema Design
+- Relational database schema designed using **SQLAlchemy ORM**
+- Clear entity relationships between users, appointments, and treatments
+- Architecture easily portable to **PostgreSQL / MySQL** for production environments
+
+#### API Documentation
+- REST APIs designed to be easily testable via **Postman**
+- Endpoint structure compatible with **Swagger / OpenAPI** documentation
+
+---
+
+### Frontend
+
+- Frontend UI built to **interact with backend APIs** using Vue.js
+- User workflows implemented:
+  - User registration and login
+  - Role-based dashboards (Admin / Doctor / Patient)
+  - Protected routes requiring JWT authentication
+- CRUD interactions with backend APIs:
+  - Appointment creation, update, and deletion
+- Clear display of API success and error messages
+
+---
+
+### Security & Scalability Considerations
+
+- Secure JWT token handling for authenticated requests
+- Password hashing and role validation enforced at API level
+- Redis caching implemented for frequently accessed queries
+- Asynchronous background processing using **Celery** for:
+  - Scheduled reminders
+  - Monthly reports
+  - CSV exports
+- Scalable architecture designed around:
+  - Stateless REST APIs
+  - Caching layer
+  - Background workers
+  - Future Docker-based deployment
+
+---
+
+### Advanced Enhancements
+
+- Redis caching for performance optimization
+- Celery-based background jobs
+- CSV export functionality for reporting
+- Scheduling logic for reminders and analytics
 
 ---
 
