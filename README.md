@@ -6,26 +6,26 @@ This is a project that will help in swift and efficient management of Hospital D
 
 ## Features
 
-This project demonstrates a **secure, scalable REST API** with authentication, role-based access control, and a minimal frontend UI to interact with backend APIs, aligned with the Backend Developer Intern assignment.
+This project demonstrates a **secure, scalable REST API** with authentication, authorization, role-based access control, and a frontend UI to interact with backend APIs.
 
 ---
 
 ### Backend 
 
 #### Authentication & Authorization
-- User registration and login APIs with **secure password hashing**
+- User registration and login APIs with **argon2 secure password hashing  algorithm**
 - **JWT-based authentication** for protected routes
 - **Role-Based Access Control (RBAC)** implemented using:
   - `admin`
   - `doctor`
   - `patient`  
-  (maps directly to *admin vs user* role requirement)
 
 #### REST API Design
 - Versioned REST APIs using `/api/v1/*`
 - Proper HTTP status codes and centralized error handling
 - Input validation and request sanitization
 - Modular, scalable project structure for future feature expansion
+- Resource - Service Design for scalability
 
 #### CRUD Operations 
 - **Appointment** entity with full CRUD support:
