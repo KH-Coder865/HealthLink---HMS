@@ -1,0 +1,458 @@
+openapi: 3.0.3
+info:
+  title: Hospital Management System API
+  version: 2.0.0
+  description: Unified API documentation for Users, Doctors, Patients, Appointments, Treatments, and Specializations.
+
+servers:
+  - url: http://127.0.0.1:5000
+    description: Local Development Server
+
+paths:
+
+  ###########################################################################
+  # AUTH
+  ###########################################################################
+
+  /api/auth/register:
+    post:
+      summary: Register new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201': { description: User registered successfully }
+
+  /api/auth/login:
+    post:
+      summary: Login user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200': { description: Login successful; token returned }
+
+  ###########################################################################
+  # USERS
+  ###########################################################################
+
+  /api/users:
+    get:
+      summary: Get all users
+      tags: [Users]
+      security:
+        - authToken: []
+      responses:
+        '200': { description: List of users }
+
+    post:
+      summary: Create user (admin only)
+      tags: [Users]
+      security:
+        - authToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201': { description: User created successfully }
+
+  /api/users/{id}:
+    get:
+      summary: Get user by ID
+      tags: [Users]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: User data }
+
+    put:
+      summary: Update user fully
+      tags: [Users]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Updated user }
+
+    patch:
+      summary: Partially update user
+      tags: [Users]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Updated user }
+
+    delete:
+      summary: Delete user
+      tags: [Users]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: User deleted }
+
+  ###########################################################################
+  # DOCTORS
+  ###########################################################################
+
+  /api/doctors:
+    get:
+      summary: Get all doctors
+      tags: [Doctors]
+      security:
+        - authToken: []
+      responses:
+        '200': { description: List of doctors }
+
+    post:
+      summary: Create new doctor
+      tags: [Doctors]
+      security:
+        - authToken: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorCreate'
+      responses:
+        '201': { description: Doctor created }
+
+  /api/doctors/{id}:
+    patch:
+      summary: Update doctor
+      tags: [Doctors]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorUpdate'
+      responses:
+        '200': { description: Updated doctor }
+
+    delete:
+      summary: Delete doctor
+      tags: [Doctors]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Doctor deleted }
+
+  /api/doctor:
+    get:
+      summary: Get doctor by ID or user ID
+      tags: [Doctors]
+      security:
+        - authToken: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: uid
+          in: query
+          schema: { type: integer }
+      responses:
+        '200': { description: Doctor data }
+
+  ###########################################################################
+  # PATIENTS
+  ###########################################################################
+
+  /api/patients:
+    get:
+      summary: Get all patients
+      tags: [Patients]
+      security:
+        - authToken: []
+      responses:
+        '200': { description: List of patients }
+
+  /api/patients/{id}:
+    patch:
+      summary: Update patient
+      tags: [Patients]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientUpdate'
+      responses:
+        '200': { description: Updated patient }
+
+  /api/patient:
+    get:
+      summary: Get patient by ID or user ID
+      tags: [Patients]
+      security:
+        - authToken: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: uid
+          in: query
+          schema: { type: integer }
+      responses:
+        '200': { description: Patient data }
+
+  ###########################################################################
+  # APPOINTMENTS
+  ###########################################################################
+
+  /api/appointments:
+    get:
+      summary: Get all appointments
+      tags: [Appointments]
+      security:
+        - authToken: []
+      responses:
+        '200': { description: List of appointments }
+
+    post:
+      summary: Book appointment
+      tags: [Appointments]
+      security:
+        - authToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreate'
+      responses:
+        '201': { description: Appointment created }
+
+  /api/appointments/{id}:
+    patch:
+      summary: Update appointment
+      tags: [Appointments]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentUpdate'
+      responses:
+        '200': { description: Appointment updated }
+
+    delete:
+      summary: Cancel appointment
+      tags: [Appointments]
+      security:
+        - authToken: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200': { description: Appointment deleted }
+
+  /api/appointment:
+    get:
+      summary: Query appointment
+      tags: [Appointments]
+      security:
+        - authToken: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: pid
+          in: query
+          schema: { type: integer }
+        - name: did
+          in: query
+          schema: { type: integer }
+      responses:
+        '200': { description: Appointment data }
+
+  ###########################################################################
+  # TREATMENTS
+  ###########################################################################
+
+  /api/treatments:
+    post:
+      summary: Add treatment to appointment
+      tags: [Treatments]
+      security:
+        - authToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TreatmentCreate'
+      responses:
+        '201': { description: Treatment added }
+
+  ###########################################################################
+  # SPECIALIZATIONS
+  ###########################################################################
+
+  /api/specializations:
+    post:
+      summary: Create specialization
+      tags: [Specializations]
+      security:
+        - authToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Specialization'
+      responses:
+        '201': { description: Specialization created }
+
+  /api/specialization:
+    get:
+      summary: Get specialization by ID or name
+      tags: [Specializations]
+      security:
+        - authToken: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: integer }
+        - name: name
+          in: query
+          schema: { type: string }
+      responses:
+        '200': { description: Specialization data }
+
+###############################################################################
+# COMPONENTS
+###############################################################################
+
+components:
+
+  securitySchemes:
+    authToken:
+      type: apiKey
+      in: header
+      name: Authentication-Token
+
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+
+    Login:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    UserRegister:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name: { type: string }
+        email: { type: string }
+        password: { type: string }
+        role:
+          type: string
+          enum: ["doctor", "patient"]
+        age: { type: integer }
+        gender: { type: string }
+        contact_number: { type: string }
+        address: { type: string }
+        emergency_contact: { type: string }
+
+    UserCreate:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name: { type: string }
+        email: { type: string }
+        password: { type: string }
+        role: { type: string }
+
+    DoctorCreate:
+      type: object
+      required: [u_id, specialization_id]
+      properties:
+        u_id: { type: integer }
+        specialization_id: { type: integer }
+        availability: { type: object }
+        contact_number: { type: string }
+
+    DoctorUpdate:
+      type: object
+      properties:
+        specialization_id: { type: integer }
+        availability: { type: object }
+        contact_number: { type: string }
+
+    PatientUpdate:
+      type: object
+      properties:
+        age: { type: integer }
+        gender: { type: string }
+        contact_number: { type: string }
+        address: { type: string }
+        emergency_contact: { type: string }
+
+    AppointmentCreate:
+      type: object
+      required: [doctor_id, patient_id, appointment_date, appointment_time]
+      properties:
+        doctor_id: { type: integer }
+        patient_id: { type: integer }
+        appointment_date: { type: string, format: date }
+        appointment_time: { type: string, format: time }
+
+    AppointmentUpdate:
+      type: object
+      properties:
+        status: { type: string }
+
+    TreatmentCreate:
+      type: object
+      required: [appointment_id]
+      properties:
+        appointment_id: { type: integer }
+        diagnosis: { type: string }
+        tests_done: { type: string }
+        prescription: { type: object }
+        notes: { type: string }
+
+    Specialization:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string }
