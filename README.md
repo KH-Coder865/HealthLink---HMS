@@ -88,6 +88,16 @@ This project demonstrates a **secure, scalable REST API** with authentication, a
 
 ---
 
+## 📘 API Documentation
+
+- OpenAPI Specification: `docs/OpenAPI.yaml`
+- Postman Collection: `docs/postman/collections/Hospital Management System API.postman_collection.json`
+
+  The Postman collection was generated directly from the OpenAPI
+  specification to ensure consistency.
+
+---
+
 ## 🚀 Technical Stack
 
 This project utilizes the following technologies:
