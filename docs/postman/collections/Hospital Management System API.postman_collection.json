@@ -1,0 +1,1690 @@
+{
+  "info": {
+    "_postman_id": "5475be9a-4484-4727-85ca-d5a2563d9652",
+    "name": "Hospital Management System API",
+    "description": "Unified API documentation for Users, Doctors, Patients, Appointments, Treatments, and Specializations.\n",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "Get user by ID",
+              "id": "1144c515-3201-4a88-b5d8-7c9ef49e8249",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "d3a0d8a2-d876-43a0-8317-ef5d2b4dcfbc",
+                  "name": "User data",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Update full user data",
+              "id": "1533f485-6571-423c-bbe5-578b6b40730d",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "377f2b75-1540-4098-8af4-0a8233879968",
+                  "name": "Updated user",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Partially update user",
+              "id": "4aa5687d-f8cc-48d4-a1cd-d5523af88709",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "9787041d-5366-4dd9-9040-9d6b9577d2bc",
+                  "name": "Updated user",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Delete user",
+              "id": "3fa25cca-a2f5-4d25-ac98-5e76f5f66214",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/users/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "1f0d3e9f-e368-4fe0-b68d-6922b0a42e32",
+                  "name": "User deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "d1788786-d68f-4096-acf8-ecb5f42a21af"
+        },
+        {
+          "name": "Get all users",
+          "id": "60284a2b-c37b-4f4a-af5c-e438c9106896",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "632285a6-840d-46e9-a9be-2c255d7161ca",
+              "name": "List of users",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Create user (admin only)",
+          "id": "f972420c-163e-48ef-a4f7-52bcbaa52bd9",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2ea69bb0-2d6d-4fab-abd1-161beddc3820",
+              "name": "User created successfully",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"role\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "bbafe0a1-b3f1-477f-a07a-c4745f5e7a4a"
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "item": [
+            {
+              "name": "Register new user",
+              "id": "0a0d2f49-dcd3-48ce-a0a4-11e44ef6fbd6",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "e853e576-0976-41ab-ae5e-23cee76ac372",
+                  "name": "User registered",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/register",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "register"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "b829f35b-f419-4086-ab2f-c6f4c626f61b"
+        },
+        {
+          "name": "login",
+          "item": [
+            {
+              "name": "Login user",
+              "id": "80508c34-45cc-445b-b05a-2d64e017714c",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "65b32aee-de88-490c-bdfa-93cd75bf031b",
+                  "name": "Access token returned",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"email\": \"string\",\n  \"password\": \"string\"\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "9b535d11-a83f-41e2-8b0a-4dbdc339e5ba"
+        }
+      ],
+      "id": "6f67e8a2-1284-4367-96ef-a272d2882f1a"
+    },
+    {
+      "name": "doctors",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "Update doctor (partial)",
+              "id": "372a3341-76eb-43b5-a039-81d2216491a3",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/doctors/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "doctors",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "5f0e7d0b-1061-4f92-bafc-92d9b77d4a14",
+                  "name": "Updated doctor",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/doctors/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "doctors",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Delete doctor",
+              "id": "3f3a7c63-7d59-47aa-b1bc-e82dacff388a",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/doctors/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "doctors",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "84debdb0-4ddb-4eef-9e90-baa9a79aa3b8",
+                  "name": "Doctor deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/doctors/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "doctors",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "4e58b806-0f14-4fa9-aaab-4c591ea28335"
+        },
+        {
+          "name": "Get all doctors",
+          "id": "20a6bc7d-688e-425a-8d1f-15e541fcb5f9",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "97b3df71-82eb-48cb-be5c-2ec339cd5231",
+              "name": "List of doctors",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/doctors",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "doctors"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Create new doctor",
+          "id": "f9a216aa-09ec-4384-9dfd-3af1616f7a48",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctors"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "04eedbb7-6117-465b-94a6-32e189eaebee",
+              "name": "Doctor created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/doctors",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "doctors"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "e3609a58-2ddb-4173-b3ea-9cb87104b894"
+    },
+    {
+      "name": "doctor",
+      "item": [
+        {
+          "name": "Get doctor by ID or UID",
+          "id": "1be05290-bec1-46a5-a162-3e342648e627",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/doctor?id=5758&uid=5758",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "doctor"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "5758"
+                },
+                {
+                  "key": "uid",
+                  "value": "5758"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0e87e394-4207-4572-86bb-85f8fa8e1dd5",
+              "name": "Doctor data",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/doctor?id=5758&uid=5758",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "doctor"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "5758"
+                    },
+                    {
+                      "key": "uid",
+                      "value": "5758"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "dc4c8196-651d-4959-a370-56cb809130e2"
+    },
+    {
+      "name": "patients",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "Update patient",
+              "id": "b94072db-8b13-4579-a906-f3ac6bc3d491",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{bearerToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "be3f4c22-b188-42b6-9cf2-4faa8ef9482b",
+                  "name": "Updated patient",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer <token>",
+                        "description": "Added as a part of security scheme: bearer"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "ed80534c-804c-4226-b29b-0ddbe5f11806"
+        },
+        {
+          "name": "Get all patients",
+          "id": "c21af1e2-1ac5-4f21-b224-e25fc43f4670",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c0253f25-1113-4d3d-9032-a18509f7095a",
+              "name": "List of patients",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer <token>",
+                    "description": "Added as a part of security scheme: bearer"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "1b4e782f-645c-48ab-a047-17379c529386"
+    },
+    {
+      "name": "patient",
+      "item": [
+        {
+          "name": "Get patient by ID or UID",
+          "id": "f6cddcda-a3e6-4ac3-9bf1-81b152184754",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/patient?id=5758&uid=5758",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patient"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "5758"
+                },
+                {
+                  "key": "uid",
+                  "value": "5758"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d8b4b20c-3db9-4707-92bd-22f37ffe41b8",
+              "name": "Patient data",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/patient?id=5758&uid=5758",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patient"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "5758"
+                    },
+                    {
+                      "key": "uid",
+                      "value": "5758"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "2c491366-eeab-41aa-bea8-58cfbd87f9ea"
+    },
+    {
+      "name": "appointments",
+      "item": [
+        {
+          "name": "{id}",
+          "item": [
+            {
+              "name": "Update appointment",
+              "id": "d7d55302-1c82-4d60-9f9a-0befe1a1e106",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "01dd12a3-9502-4655-bf1d-54c99f578629",
+                  "name": "Appointment updated",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            },
+            {
+              "name": "Cancel appointment",
+              "id": "221a8f68-ff72-42d6-a3c8-7647ed9a49ab",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "5758",
+                      "description": "Numeric ID of the resource"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "f49d0c05-b6cf-4df9-a48d-ba6a0584f574",
+                  "name": "Appointment deleted",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "5758",
+                          "description": "Numeric ID of the resource"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": null
+                }
+              ]
+            }
+          ],
+          "id": "746c283c-c762-4fda-94fc-7c2a4b73fb07"
+        },
+        {
+          "name": "Get all appointments",
+          "id": "7f99d1db-2f71-46ee-be9e-bf7f406cd567",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f5e19d90-f477-410c-a206-0b629906c11b",
+              "name": "List of appointments",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Book appointment",
+          "id": "db1d58dd-9e6e-4811-959c-6e329386e015",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "71ae9480-0152-4cd0-bee7-6f2d89f6bc46",
+              "name": "Appointment created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "f872eef5-761b-4255-a126-1ba9d5dc241c"
+    },
+    {
+      "name": "appointment",
+      "item": [
+        {
+          "name": "Query appointment by multiple conditions",
+          "id": "dc623532-fc91-4afe-b425-8d65c198738d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/appointment?id=5758&pid=5758&did=5758",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointment"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "5758"
+                },
+                {
+                  "key": "pid",
+                  "value": "5758"
+                },
+                {
+                  "key": "did",
+                  "value": "5758"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "476b0c1d-80f7-4667-98e9-ac3092e649b3",
+              "name": "Appointments matching query",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/appointment?id=5758&pid=5758&did=5758",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointment"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "5758"
+                    },
+                    {
+                      "key": "pid",
+                      "value": "5758"
+                    },
+                    {
+                      "key": "did",
+                      "value": "5758"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "2c5c85f6-c8ea-4826-afbb-3f22ab2a0af5"
+    },
+    {
+      "name": "treatments",
+      "item": [
+        {
+          "name": "Add treatment to an appointment",
+          "id": "9509791a-0dee-430e-9cae-2474b6a22a2c",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/treatments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "treatments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7044da96-4960-4313-9c50-6cb4c39f5a7b",
+              "name": "Treatment recorded",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/treatments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "treatments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "64a06fa8-8142-42f3-94c8-5197ea2aca07"
+    },
+    {
+      "name": "specializations",
+      "item": [
+        {
+          "name": "Create specialization",
+          "id": "2f92ce3c-070e-4ebc-b57c-55ce391fb26e",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/specializations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "specializations"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c3dd4810-714f-4d2f-acf1-ec63d387f1c4",
+              "name": "Specialization added",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\"\n}",
+                  "options": {
+                    "raw": {
+                      "headerFamily": "json",
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/specializations",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "specializations"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "4d7befb9-0da4-4b11-a221-5d969f2367d8"
+    },
+    {
+      "name": "specialization",
+      "item": [
+        {
+          "name": "Get specialization by ID or name",
+          "id": "de76f45b-1d7d-4a9e-935b-0d4976cf3604",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/specialization?id=5758&name=string",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "specialization"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "5758"
+                },
+                {
+                  "key": "name",
+                  "value": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c32b28bf-8a72-4f31-b2ce-f69c5568db5d",
+              "name": "Specialization data",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/specialization?id=5758&name=string",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "specialization"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "5758"
+                    },
+                    {
+                      "key": "name",
+                      "value": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        }
+      ],
+      "id": "0e166205-d48b-402a-babf-318b24d36518"
+    }
+  ],
+  "variable": [
+    {
+      "id": "21a95a07-3abe-4909-a629-44f2583631be",
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    }
+  ]
+}
