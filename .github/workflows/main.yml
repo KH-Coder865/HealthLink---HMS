@@ -1,5 +1,5 @@
 
-name: Pyntch Static Analysis
+name: Static Code Analysis
 
 on:
   push:
@@ -8,8 +8,12 @@ on:
 
 jobs:
   static-analysis:
-    name: Analyze Python source using Pyntch
+    name: Python Static Analysis
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - name: Checkout repository
@@ -18,25 +22,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "2.7"
+          python-version: "3.12"
 
-      - name: Download Pyntch
-        run: |
-          git clone https://github.com/euske/pyntch.git
+      - name: Install Pyright
+        run: pip install pyright
 
-      - name: Install Pyntch
-        run: |
-          cd pyntch
-          python setup.py install
-
-      - name: Run Pyntch analysis
-        continue-on-error: true
-        run: |
-          cd backend
-          python ../pyntch/tchecker.py \
-            -p . \
-            app.py models.py
-
-      - name: Analysis completed
-        if: always()
-        run: echo "Pyntch analysis step completed."
+      - name: Run Pyright
+        run: pyright
