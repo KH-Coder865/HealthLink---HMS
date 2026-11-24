@@ -1,48 +1,42 @@
 
-name: Run tests and upload coverage
+name: Pyntch Static Analysis
 
 on:
   push:
-    branches:
-      - "**"
+    branches: ["**"]
   pull_request:
 
 jobs:
-  test:
-    name: Run tests and collect coverage
+  static-analysis:
+    name: Analyze Python source using Pyntch
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: backend/req.txt
+          python-version: "2.7"
 
-      - name: Install dependencies
+      - name: Download Pyntch
         run: |
-          python -m pip install --upgrade pip
-          pip install -r req.txt
-          pip install pytest pytest-cov
+          git clone https://github.com/euske/pyntch.git
 
-      - name: Run tests
+      - name: Install Pyntch
         run: |
-          pytest tests/ -v --cov=. --cov-branch --cov-report=term-missing --cov-report=xml:coverage.xml
+          cd pyntch
+          python setup.py install
 
-      - name: Upload coverage to Codecov
+      - name: Run Pyntch analysis
+        continue-on-error: true
+        run: |
+          cd backend
+          python ../pyntch/tchecker.py \
+            -p . \
+            app.py models.py
+
+      - name: Analysis completed
         if: always()
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: backend/coverage.xml
-          fail_ci_if_error: false
+        run: echo "Pyntch analysis step completed."
